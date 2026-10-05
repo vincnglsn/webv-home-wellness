@@ -45,21 +45,42 @@ function getAccessToken(): string {
   return token;
 }
 
-async function cjRequest<T>(path: string, init?: RequestInit): Promise<CjApiResponse<T>> {
-  const res = await fetch(`${CJ_API_BASE}${path}`, {
-    ...init,
-    headers: {
-      "Content-Type": "application/json",
-      "CJ-Access-Token": getAccessToken(),
-      ...init?.headers,
-    },
-  });
+// CJdropshipping limite l'API à 1 appel par seconde (erreur 1600200 sinon) : on
+// espace tous les appels, y compris ceux lancés en boucle par les tâches de
+// relance et de suivi.
+const CJ_MIN_INTERVAL_MS = 1500;
+let nextCjSlot = 0;
 
-  const body = (await res.json()) as CjApiResponse<T>;
-  if (!res.ok || body.result === false) {
-    throw new Error(`CJdropshipping API error (${body.code}): ${body.message}`);
+async function throttleCj(): Promise<void> {
+  const now = Date.now();
+  const start = Math.max(now, nextCjSlot);
+  nextCjSlot = start + CJ_MIN_INTERVAL_MS;
+  if (start > now) await new Promise((resolve) => setTimeout(resolve, start - now));
+}
+
+const CJ_RATE_LIMIT_CODE = 1600200;
+
+async function cjRequest<T>(path: string, init?: RequestInit): Promise<CjApiResponse<T>> {
+  // Un appel refusé pour cause de limite de débit n'a pas été traité par CJ :
+  // on peut le renvoyer sans risque de doublon.
+  for (let attempt = 1; ; attempt += 1) {
+    await throttleCj();
+    const res = await fetch(`${CJ_API_BASE}${path}`, {
+      ...init,
+      headers: {
+        "Content-Type": "application/json",
+        "CJ-Access-Token": getAccessToken(),
+        ...init?.headers,
+      },
+    });
+
+    const body = (await res.json()) as CjApiResponse<T>;
+    if (body.code === CJ_RATE_LIMIT_CODE && attempt < 3) continue;
+    if (!res.ok || body.result === false) {
+      throw new Error(`CJdropshipping API error (${body.code}): ${body.message}`);
+    }
+    return body;
   }
-  return body;
 }
 
 export async function createCjOrder(input: CjCreateOrderInput) {

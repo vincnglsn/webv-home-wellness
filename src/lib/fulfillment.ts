@@ -236,7 +236,7 @@ export async function syncTracking(): Promise<{ checked: number; updated: number
       and s.status in ('placed', 'shipped')
       and s.created_at > now() - interval '60 days'
     order by s.id
-    limit 100
+    limit 40
   `) as unknown as {
     id: number;
     order_id: number;
