@@ -30,6 +30,7 @@ export const SUBCATEGORY_LABELS: Record<string, string> = {
   "murs-textiles": "Murs & Textiles",
   "objets-zen": "Objets Zen",
   halloween: "Halloween",
+  noel: "Noël",
 };
 
 export function categoryLabel(category: string): string {
