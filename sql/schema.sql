@@ -1389,3 +1389,199 @@ on conflict (slug) do update set
   cj_variant_id = excluded.cj_variant_id,
   cj_sku = excluded.cj_sku,
   cj_logistic_name = excluded.cj_logistic_name;
+
+-- Onzieme vague de produits (2026-10-05) : 6 articles Halloween (sous-categorie
+-- "halloween") et 6 articles de la nouvelle collection "noel" (categorie maison),
+-- trouves via l'API CJdropshipping (listV2). Prix de gros et livraison reelle
+-- vers la France verifies via freightCalculate, avec des transporteurs de 7 a
+-- 15 jours (marge nette 41 a 49% apres TVA 20% et frais Stripe). Ecartes apres
+-- verification : une citrouille "lanterne" dont la photo montre une citrouille
+-- unie, un fantome suspendu a l'allure d'epouvantail sanglant, une lampe crane
+-- en resine dont l'image est un rendu, un fantome macrame (dimensions absentes),
+-- des photophores de Noel (photos surchargees d'annotations), une veilleuse de
+-- neige a monter soi-meme (photo illisible).
+insert into products (
+  slug, name, description, price_cents, image_url, category, subcategory, supplier_url,
+  cj_product_id, cj_variant_id, cj_sku, cj_logistic_name
+)
+values
+  ('lampe-citrouille-ceramique-led', 'Citrouille Lumineuse en Céramique (Halloween)',
+   $$Une citrouille orange en céramique émaillée, aux yeux, au nez et à la bouche découpés, qui s'illumine de l'intérieur pour une déco d'Halloween chaleureuse.
+
+Ce que vous obtenez :
+• Une citrouille en céramique émaillée, d'un orange brillant avec une tige dorée
+• Visage de jack-o'-lantern découpé : la lumière intérieure traverse les yeux et la bouche
+• Une pièce d'environ 350 g, qui se pose facilement sur un meuble
+• Une déco réutilisable chaque automne, sans flamme ni cire
+
+À poser sur une cheminée, un rebord de fenêtre ou une table de fête dès la mi-octobre, pour accueillir les visiteurs du 31 octobre.$$,
+   2490, 'https://oss-cf.cjdropshipping.com/product/2024/07/26/08/fc5489eb-f8d5-4b7d-aaf3-26a89bdce248.jpg', 'decoration', 'halloween',
+   'https://cjdropshipping.com/product/2407260851251618000.html',
+   '2407260851251618000', '2407260851251618700', 'CJYD209430204DW', 'CJPacket Liquid Line'),
+
+  ('veilleuse-fantome-silicone-tactile', 'Veilleuse Fantôme en Silicone à Commande Tactile',
+   $$Un petit fantôme jaune pâle aux pieds orange, en silicone souple, qui s'allume d'une simple pression pour une lumière douce de chevet ou de bureau.
+
+Ce que vous obtenez :
+• Veilleuse en silicone souple et résistant, de forme fantôme, d'environ 128 × 102 × 151 mm
+• Lumière jaune douce de 0,5 W, à commande tactile
+• Batterie intégrée : aucun fil à brancher pour la poser où l'on veut
+• Une silhouette amusante plutôt qu'effrayante, qui plaît aux enfants comme aux adultes
+
+À poser sur une table de chevet, un bureau ou une étagère : une déco d'Halloween qui sert aussi de veilleuse le reste de l'année.$$,
+   2490, 'https://oss-cf.cjdropshipping.com/product/2024/08/15/03/e7c8967f-0d76-4238-9de9-322f69bbfc40_trans.jpeg', 'decoration', 'halloween',
+   'https://cjdropshipping.com/product/2408150326541603800.html',
+   '2408150326541603800', '2408150326541604000', 'CJJT211096801AZ', 'CJPacket Liquid Line'),
+
+  ('veilleuse-citrouille-silicone-tactile', 'Veilleuse Citrouille en Silicone (rechargeable USB)',
+   $$Une citrouille orange au petit visage inquiet, en silicone doux, qui se règle d'un geste tactile pour une lumière chaude et rassurante dans la chambre.
+
+Ce que vous obtenez :
+• Veilleuse en silicone sans BPA, douce au toucher et résistante aux chocs
+• Lumière LED chaude et sans scintillement, avec variateur à commande tactile
+• Recharge par câble USB, pratique pour la déplacer d'une pièce à l'autre
+• Une forme ronde et rigolote, qui fait aussi office de déco de saison
+
+À poser sur une table de chevet, une commode ou un bureau : elle habille la maison pour Halloween et reste utile toute l'année.$$,
+   2490, 'https://cf.cjdropshipping.com/quick/product/9cb9bc33-99f4-489d-b98b-b4f7493887c1.jpg', 'decoration', 'halloween',
+   'https://cjdropshipping.com/product/1709115343446216704.html',
+   '1709115343446216704', '1709115343525908480', 'CJJT186149301AZ', 'CJPacket Liquid Line'),
+
+  ('mini-lampe-citrouille-led', 'Mini Lampe Citrouille Lumineuse (Halloween)',
+   $$Une petite citrouille grimaçante en plastique, aux yeux et à la bouche creusés, qui diffuse une lumière blanc chaud à travers son visage pour une ambiance d'Halloween qui fait sourire.
+
+Ce que vous obtenez :
+• Une mini citrouille de style jack-o'-lantern, très légère (environ 80 g)
+• Lumière LED chaude de 0,25 W, qui traverse le visage découpé
+• Batterie intégrée : pas de fil, pas de bougie, donc sans danger près des enfants
+• Un format compact qui se glisse partout
+
+À poser sur un rebord de fenêtre, une étagère ou le bord d'une table de fête, seule ou en petit groupe pour une rangée de citrouilles.$$,
+   1290, 'https://oss-cf.cjdropshipping.com/product/2024/08/30/03/cab8c850-805a-4b66-bbc7-820f066b06ed.jpg', 'decoration', 'halloween',
+   'https://cjdropshipping.com/product/2408300305221619700.html',
+   '2408300305221619700', '2408300305221619901', 'CJJT212387901AZ', 'CJPacket Liquid Line'),
+
+  ('lumiere-squelette-assis-led', 'Lumière Squelette Assis (11 cm, Halloween)',
+   $$Un petit squelette blanc assis en tailleur, les mains sur la tête, dont les orbites et la mâchoire s'éclairent doucement pour une déco macabre mais drôle.
+
+Ce que vous obtenez :
+• Figurine en plastique d'environ 11 × 7,5 cm, très légère (environ 41 g)
+• Lumière LED chaude qui éclaire les yeux et la bouche du crâne
+• Coloris blanc ivoire, qui ressort bien dans la pénombre
+• Un format discret pour garnir un coin de table, une étagère ou un buffet
+
+À poser sur un rebord de fenêtre, une table de fête ou au milieu d'un décor de citrouilles pour un Halloween plus original.$$,
+   1290, 'https://cf.cjdropshipping.com/quick/product/38ecdf5f-2d05-4b22-aafb-0d41aded1376.jpg', 'decoration', 'halloween',
+   'https://cjdropshipping.com/product/2408191003281603600.html',
+   '2408191003281603600', '2408191003281603800', 'CJYD211471001AZ', 'CJPacket Liquid Line'),
+
+  ('bougie-led-main-squelette', 'Bougie LED sur Main de Squelette (Halloween)',
+   $$Une bougie électronique posée sur une main de squelette noire aux reflets dorés, pour un chandelier d'Halloween original et sans flamme.
+
+Ce que vous obtenez :
+• Support en plastique en forme de main squelettique aux doigts écartés, d'environ 7 × 9 × 8,5 cm
+• Bougie LED à flamme vacillante, sans cire, sans feu et sans fumée
+• Finition noire vieillie aux reflets dorés, pour un effet gothique
+• Très légère (environ 40 g), facile à placer partout
+
+À poser sur une cheminée, un manteau, un buffet ou au centre d'une table, seule ou en groupe, pour une lumière d'Halloween qui plaît aussi aux enfants.$$,
+   1290, 'https://cf.cjdropshipping.com/quick/product/cde5d462-abfb-4a88-ab00-dc9e915820f7.jpg', 'decoration', 'halloween',
+   'https://cjdropshipping.com/product/2407190830301619600.html',
+   '2407190830301619600', '2407190830301619800', 'CJYD208805401AZ', 'CJPacket Liquid Line'),
+
+  ('chaussette-noel-pere-noel-tricot', 'Grande Chaussette de Noël Père Noël en Tricot',
+   $$Une grande chaussette de Noël en maille rouge et crème, ornée d'un Père Noël en relief avec sa barbe en peluche, à suspendre à la cheminée ou au sapin.
+
+Ce que vous obtenez :
+• Une chaussette en tissu et maille texturée, avec un Père Noël au bonnet à motifs de flocons
+• Barbe et col en peluche douce, boutons cousus sur le manteau
+• Un petit sapin à carreaux appliqué sur le pied
+• Une boucle de suspension en haut, pour l'accrocher à un manteau de cheminée, une rambarde ou un sapin
+
+À remplir de petites surprises, de chocolats ou de bonbons : une déco traditionnelle qui sert aussi de cache-cadeau le matin de Noël.$$,
+   1790, 'https://cf.cjdropshipping.com/16017408/1306742658480.jpg', 'decoration', 'noel',
+   'https://cjdropshipping.com/product/DF6DD0F2-FE0A-4D50-98FF-AA743747CDB8.html',
+   'DF6DD0F2-FE0A-4D50-98FF-AA743747CDB8', '47C19C39-B999-4455-8949-78EE6972AF88', 'CJJJJRSD00380-Santa Claus', 'CJPacket Ordinary E'),
+
+  ('sapin-spirale-dore-led', 'Sapin Spirale Doré Lumineux (métal, LED)',
+   $$Un sapin de table en fil de métal doré enroulé en spirale, coiffé d'une étoile, que de petites LED chaudes font scintiller pour une ambiance de Noël douce et élégante.
+
+Ce que vous obtenez :
+• Sapin en métal de forme spirale, avec une étoile dorée au sommet
+• Petites LED à lumière chaude répartie sur toute la spirale
+• Fonctionnement à piles, sans prise électrique à proximité
+• Un socle doré stable, pour le poser sur une table, un manteau ou un rebord de fenêtre
+
+Coloris doré à lumière blanc chaud. Pour une table de fête, une chambre ou un buffet : une déco de Noël discrète qui fait aussi veilleuse.$$,
+   2990, 'https://cf.cjdropshipping.com/quick/product/5c28c324-5f0d-49a4-bbe1-7e99892413c8.jpg', 'decoration', 'noel',
+   'https://cjdropshipping.com/product/2409270619361600100.html',
+   '2409270619361600100', '2409270619361600300', 'CJHD214824101AZ', 'CJPacket Liquid Line'),
+
+  ('lanterne-flocons-noel-led', 'Lanterne de Noël Blanche à Flocons et Bougie LED',
+   $$Une petite lanterne en métal blanc, percée de flocons de neige, dont la lumière chaude traverse les motifs pour une ambiance de Noël nordique et douillette.
+
+Ce que vous obtenez :
+• Lanterne en métal blanc, ajourée de flocons de neige et de petits points lumineux
+• Poignée en métal pour la porter ou l'accrocher à un crochet
+• Lumière chaude de bougie électronique à flamme vacillante, sans cire ni feu
+• Un format léger (environ 150 g), à poser sur un meuble ou à suspendre
+
+À poser sur une table de fête, un manteau de cheminée ou une entrée, pour une déco d'hiver sans danger près des enfants.$$,
+   1690, 'https://cf.cjdropshipping.com/quick/product/fc741554-2c2f-485c-9ccc-d230e928632f.jpg', 'decoration', 'noel',
+   'https://cjdropshipping.com/product/1703652282832793600.html',
+   '1703652282832793600', '1703652282866348032', 'CJYD185027101AZ', 'CJPacket Liquid Line'),
+
+  ('calendrier-avent-gnome-tissu', 'Calendrier de l''Avent Gnome en Tissu à Suspendre',
+   $$Un grand calendrier de l'Avent en tissu, en forme de gnome de Noël à la barbe en peluche, avec 24 petites poches numérotées à remplir de surprises jusqu'au 24 décembre.
+
+Ce que vous obtenez :
+• Un gnome rouge et gris, au bonnet orné de 24 poches numérotées, avec une poche supplémentaire pour le jour 25
+• Tissu non tissé doux et résistant, barbe en fausse fourrure
+• Une cordelette en haut pour l'accrocher au mur, à une porte ou à une fenêtre
+• Un moyen ludique de faire patienter les enfants avant Noël
+
+À remplir de petits chocolats, de mots doux ou de petits cadeaux, un par jour : une déco de décembre qui devient un rituel de famille.$$,
+   2190, 'https://cf.cjdropshipping.com/de22e269-1472-4b6d-bd42-f0a6b3aa83a8.jpg', 'decoration', 'noel',
+   'https://cjdropshipping.com/product/1439833257045790720.html',
+   '1439833257045790720', '1439833257121288192', 'CJJT129355001AZ', 'CJPacket Ordinary E'),
+
+  ('rideau-lumineux-anneaux-noel', 'Rideau Lumineux de Noël à Anneaux (3 m, 120 LED)',
+   $$Un rideau lumineux de 3 m de large, orné d'anneaux lumineux dans lesquels pendent des petits personnages de Noël (Père Noël, bonhomme de neige, renne, sapin), pour habiller une fenêtre ou un mur.
+
+Ce que vous obtenez :
+• Guirlande rideau de 3 × 0,5 m, avec 120 LED multicolores
+• Anneaux lumineux avec figurines de Noël : Père Noël, bonhomme de neige, renne, sapin
+• Câble PVC, avec prise ronde européenne : à brancher directement sur le secteur
+• Une installation simple, à accrocher en haut d'une fenêtre, d'un mur ou d'un cadre
+
+À installer devant une fenêtre ou derrière un canapé pour un effet féérique à la nuit tombée.$$,
+   2790, 'https://cf.cjdropshipping.com/quick/product/ca8cb377-6a94-4ac4-a617-799aa1d3e5fa.jpg', 'decoration', 'noel',
+   'https://cjdropshipping.com/product/2410010837151621500.html',
+   '2410010837151621500', '2410010837151621800', 'CJHD215087602BY', 'CJPacket Liquid Line'),
+
+  ('lampe-3d-acrylique-sapin-noel', 'Lampe 3D Acrylique Sapin de Noël (Merry Christmas)',
+   $$Une lampe en acrylique gravé, en forme de sapin de Noël couvert de cadeaux et de guirlandes, qui s'éclaire sur une base lumineuse blanc chaud pour une déco de Noël en relief.
+
+Ce que vous obtenez :
+• Plaque en acrylique gravée d'un sapin, de cadeaux et de l'inscription « Merry Christmas »
+• Base lumineuse à LED blanc chaud, qui fait ressortir le motif
+• Une lumière douce qui ne chauffe pas, utilisable comme veilleuse
+• Un format de table, léger (environ 220 g)
+
+À poser sur un buffet, un bureau ou une table de chevet : une jolie idée de petit cadeau de Noël pour toute la famille.$$,
+   1790, 'https://oss-cf.cjdropshipping.com/product/2023/10/29/08/af638829-5442-4131-9be3-dae0f1d15193.jpg', 'decoration', 'noel',
+   'https://cjdropshipping.com/product/1718542483283521536.html',
+   '1718542483283521536', '1718542483350630400', 'CJYS188276401AZ', 'CJPacket Ordinary E')
+
+on conflict (slug) do update set
+  name = excluded.name,
+  description = excluded.description,
+  price_cents = excluded.price_cents,
+  image_url = excluded.image_url,
+  category = excluded.category,
+  subcategory = excluded.subcategory,
+  supplier_url = excluded.supplier_url,
+  cj_product_id = excluded.cj_product_id,
+  cj_variant_id = excluded.cj_variant_id,
+  cj_sku = excluded.cj_sku,
+  cj_logistic_name = excluded.cj_logistic_name;
