@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { retryUnfulfilledOrders, syncTracking } from "@/lib/fulfillment";
 import { sendAlert } from "@/lib/alerts";
 
+// Les appels CJ sont espacés d'1,1 s : on laisse jusqu'à 60 s à la tâche.
+export const maxDuration = 60;
+
 // Appelée périodiquement par Vercel Cron (cf. vercel.json), qui envoie
 // automatiquement "Authorization: Bearer $CRON_SECRET".
 export async function GET(request: NextRequest) {
