@@ -73,10 +73,13 @@ export async function GET() {
     "",
   ].join("\n");
 
+  // Cache court : les plateformes récupèrent le flux à la demande (routine
+  // quotidienne, bouton « mettre à jour »), il doit refléter la base à quelques
+  // minutes près. Une heure de cache servait l'ancien flux sans les nouveaux produits.
   return new Response(body, {
     headers: {
       "Content-Type": "application/xml; charset=utf-8",
-      "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
+      "Cache-Control": "public, s-maxage=300, stale-while-revalidate=60",
     },
   });
 }
