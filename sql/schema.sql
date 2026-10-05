@@ -1279,3 +1279,113 @@ on conflict (slug) do update set
   cj_variant_id = excluded.cj_variant_id,
   cj_sku = excluded.cj_sku,
   cj_logistic_name = excluded.cj_logistic_name;
+
+-- Dixieme vague de produits (2026-10-05) : 6 articles Halloween (categorie
+-- maison, nouvelle sous-categorie "halloween") trouves via l'API
+-- CJdropshipping (listV2). Prix de gros et livraison reelle vers la France
+-- verifies via freightCalculate, avec des transporteurs de 7 a 11 jours pour
+-- arriver avant le 31 octobre (marge nette 39 a 48% apres TVA 20% et frais
+-- Stripe). Ecartes : une couronne fantome et une guirlande d'automne
+-- (livraison disproportionnee), une nappe (dimensions absentes de la fiche).
+insert into products (
+  slug, name, description, price_cents, image_url, category, subcategory, supplier_url,
+  cj_product_id, cj_variant_id, cj_sku, cj_logistic_name
+)
+values
+  ('bougeoir-fantome-feu-de-camp', 'Bougeoir Fantôme au Feu de Camp (Halloween)',
+   $$Un petit fantôme en résine qui fait griller une brochette de bonbon près d'un feu de camp, pour une déco d'Halloween drôle et chaleureuse plutôt qu'effrayante.
+
+Ce que vous obtenez :
+• Figurine en résine d'environ 250 g, un fantôme blanc au sourire malicieux tenant sa brochette de bonbon candy corn
+• Un petit feu de camp aux flammes orangées qui sert de support à une bougie chauffe-plat (non fournie)
+• Une pièce qui sert de bougeoir et de figurine déco, réutilisable chaque automne
+• Format idéal pour une étagère, une cheminée, une table ou un coin café
+
+Allumez une bougie chauffe-plat dans le feu de camp : la lumière traverse les flammes et le fantôme s'illumine doucement, pour une ambiance d'Halloween cosy.$$,
+   2290, 'https://oss-cf.cjdropshipping.com/product/2026/08/13/02/0a23915e-8749-479b-a748-bf6426e00834_water.jpeg', 'decoration', 'halloween',
+   'https://cjdropshipping.com/product/2608130242081613500.html',
+   '2608130242081613500', '2608130242081616700', 'CJJT305703301AZ', 'YunExpress Ordinary'),
+
+  ('lampe-citrouille-chapeau-sorciere', 'Lampe Citrouille Chapeau de Sorcière (USB)',
+   $$Une lampe d'ambiance en forme de citrouille coiffée d'un chapeau de sorcière noir, ornée de chauves-souris et de petits fantômes en relief, pour illuminer une table d'Halloween.
+
+Ce que vous obtenez :
+• Citrouille en résine façonnée à la main, d'allure rétro et un peu gothique
+• Chapeau de sorcière noir brillant, chauves-souris et fantômes en relief sur la coque
+• Lumière chaude orangée qui traverse la citrouille, pour un effet de jack-o'-lantern lumineux
+• Alimentation par câble USB, sans flamme ni chaleur excessive, donc adaptée près des enfants
+
+À poser sur une commode, un bureau ou une table de fête dès début octobre : une lampe de saison qui fait aussi veilleuse décorative dans le salon.$$,
+   2990, 'https://oss-cf.cjdropshipping.com/product/2026/08/13/01/b983ed68-42f6-4870-9775-9589e9461a9c_water.jpeg', 'decoration', 'halloween',
+   'https://cjdropshipping.com/product/2608130203471600000.html',
+   '2608130203471600000', '2608130203471601203', 'CJJT305679405EV', 'YunExpress Ordinary'),
+
+  ('lanterne-halloween-retro-citrouille', 'Lanterne Halloween Rétro à Flamme LED (scène citrouille)',
+   $$Une lanterne rétro à poignée dont la vitre montre une scène d'Halloween : citrouilles, maison hantée, chauves-souris et grande lune orange, éclairée par une flamme LED qui vacille.
+
+Ce que vous obtenez :
+• Lanterne d'environ 9,5 × 15 cm (17 cm avec la poignée de suspension), en plastique
+• Scène imprimée avec arbres, tombes, maison hantée et citrouilles sur fond de pleine lune
+• Éclairage LED façon bougie, sans flamme ni risque de brûlure
+• Poignée en métal pour la suspendre à un crochet ou la porter pour une chasse aux bonbons
+
+À poser sur un rebord de fenêtre, une table d'entrée ou à accrocher dans le jardin, pour accueillir les visiteurs d'Halloween avec une ambiance spectrale.$$,
+   1490, 'https://cf.cjdropshipping.com/quick/product/0d345fdc-9bea-4ded-8b16-3ca1e9eaeda8.jpg', 'decoration', 'halloween',
+   'https://cjdropshipping.com/product/1694985111265095680.html',
+   '1694985111265095680', '1694985111298650112', 'CJHD183058501AZ', 'CJPacket Liquid Line'),
+
+  ('guirlande-lumineuse-citrouilles', 'Guirlande Lumineuse Citrouilles Halloween (20 LED)',
+   $$Une guirlande de citrouilles souriantes aux visages de jack-o'-lantern, à lumière blanc chaud, pour habiller une fenêtre, une cheminée ou une table d'Halloween.
+
+Ce que vous obtenez :
+• 20 petites citrouilles en PVC souple, avec visages découpés qui laissent passer la lumière
+• Lumière blanc chaud, ambiance chaleureuse et festive
+• Fonctionne avec 3 piles AA (non fournies), donc sans prise à proximité
+• Chaque lumière est indépendante : si l'une s'éteint, les autres restent allumées
+• Fil de cuivre souple et flexible, facile à draper et à fixer
+
+À accrocher autour d'une fenêtre, sur un manteau de cheminée ou le long d'un escalier, pour installer l'ambiance d'Halloween en quelques minutes.$$,
+   1690, 'https://cf.cjdropshipping.com/quick/product/1d7a299f-e4f6-4163-9690-64cac42be9b4.jpg', 'decoration', 'halloween',
+   'https://cjdropshipping.com/product/2408260543391611600.html',
+   '2408260543391611600', '2408260543391611900', 'CJHD212032502BY', 'CJPacket Liquid Line'),
+
+  ('chandelier-squelette-led', 'Chandelier Squelette à 3 Bougies LED (Halloween)',
+   $$Un petit squelette qui tient un chandelier à trois bougies LED sans flamme, pour un décor d'Halloween macabre mais sans danger.
+
+Ce que vous obtenez :
+• Buste de squelette blanc surmonté d'un crâne, avec trois bras portant chacun une bougie
+• Trois bougies électroniques LED à flamme vacillante, sans cire, sans feu et sans fumée
+• Corps en plastique moulé, très léger (moins de 100 g)
+• Un effet lumineux qui accroche l'œil dans la pénombre
+
+À poser sur une table de fête, une étagère ou un rebord de fenêtre, pour un éclairage d'Halloween qui plaît aussi aux enfants.$$,
+   990, 'https://cf.cjdropshipping.com/quick/product/c6286619-31ba-42c5-9d75-3de74e7cd20e.jpg', 'decoration', 'halloween',
+   'https://cjdropshipping.com/product/2408190950431603400.html',
+   '2408190950431603400', '2408190950431603600', 'CJYD211468801AZ', 'CJPacket Liquid Line'),
+
+  ('fantomes-lumineux-suspendre-x3', 'Lot de 3 Fantômes Lumineux à Suspendre (45 cm)',
+   $$Trois petits fantômes en tissu coiffés d'un chapeau de sorcière noir, à suspendre pour faire flotter une ambiance d'Halloween à l'entrée, au plafond ou au jardin.
+
+Ce que vous obtenez :
+• Lot de 3 fantômes de 45 cm environ, avec chapeau pointu noir et visage découpé
+• Tissu léger qui flotte au moindre courant d'air, pour un effet fantomatique réaliste
+• Lumière intégrée au chapeau, pour éclairer le fantôme le soir
+• Accroche simple : on les suspend à une branche, un crochet de porte ou une corniche
+
+À installer sur la porte d'entrée, dans un arbre ou au-dessus d'une table de fête, pour accueillir les petits monstres du quartier le 31 octobre.$$,
+   1990, 'https://oss-cf.cjdropshipping.com/product/2024/07/18/09/3be5ca7b-67ae-45a9-9f93-2e8bf3691cf1_trans.jpeg', 'decoration', 'halloween',
+   'https://cjdropshipping.com/product/2407180912521616500.html',
+   '2407180912521616500', '2407180912521617600', 'CJJT208726206FU', 'CJPacket Liquid Line')
+
+on conflict (slug) do update set
+  name = excluded.name,
+  description = excluded.description,
+  price_cents = excluded.price_cents,
+  image_url = excluded.image_url,
+  category = excluded.category,
+  subcategory = excluded.subcategory,
+  supplier_url = excluded.supplier_url,
+  cj_product_id = excluded.cj_product_id,
+  cj_variant_id = excluded.cj_variant_id,
+  cj_sku = excluded.cj_sku,
+  cj_logistic_name = excluded.cj_logistic_name;
