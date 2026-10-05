@@ -20,7 +20,8 @@ export default function RetoursPage() {
             <p>
               Nos produits sont expédiés directement depuis nos entrepôts fournisseurs. Le délai
               de livraison moyen est de 7 à 20 jours ouvrés selon le produit et votre localisation.
-              Un numéro de suivi vous est communiqué dès que le colis est pris en charge par le
+              La livraison est offerte, en France, en Belgique, en Suisse et au Luxembourg. Un
+              numéro de suivi vous est communiqué dès que le colis est pris en charge par le
               transporteur.
             </p>
           </section>
@@ -43,9 +44,11 @@ export default function RetoursPage() {
               <a href="mailto:contact@whatelsebyvinc.com" className="underline">
                 contact@whatelsebyvinc.com
               </a>{" "}
-              en indiquant votre numéro de commande. Les frais de retour sont à la charge du
-              client, sauf en cas de produit défectueux ou non conforme à la commande, où ils sont
-              intégralement remboursés.
+              en indiquant votre numéro de commande. Le retour s&apos;effectue par envoi postal.
+              Les articles doivent nous être retournés neufs ou légèrement utilisés. Les frais de
+              retour sont à la charge du client, sauf en cas de produit défectueux ou non conforme à
+              la commande, où ils sont intégralement remboursés. Les échanges ne sont pas proposés :
+              tout retour accepté donne lieu à un remboursement.
             </p>
           </section>
           <section>
