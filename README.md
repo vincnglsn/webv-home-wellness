@@ -4,28 +4,42 @@ Boutique en ligne (dropshipping) d'objets de bien-être et de décoration.
 
 ## Stack
 
-- [Next.js](https://nextjs.org) (App Router, TypeScript, Tailwind CSS)
+- [Next.js](https://nextjs.org) (App Router, TypeScript, Tailwind CSS), déployé sur Vercel
 - [Neon](https://neon.tech) (Postgres serverless) via `@neondatabase/serverless`
+- [Stripe](https://stripe.com) Checkout pour le paiement
+- [CJdropshipping](https://developers.cjdropshipping.com) pour la commande fournisseur automatique
 
 ## Démarrer en local
 
 ```bash
 npm install
+cp .env.example .env.local   # puis renseigner les variables
 npm run dev
 ```
 
-Le site attend une variable `DATABASE_URL` (voir `.env.local`, ignoré par git)
-pointant vers la base Neon. Le schéma et des produits de démonstration sont
-définis dans [`sql/schema.sql`](sql/schema.sql) ; applique-le sur ta base avec :
+Variables d'environnement : voir [`.env.example`](.env.example). Le schéma, les
+migrations et le catalogue sont dans [`sql/schema.sql`](sql/schema.sql), conçu
+pour être rejoué sans risque :
 
 ```bash
 psql "$DATABASE_URL" -f sql/schema.sql
 ```
 
-## Structure
+## Flux de commande
 
-- `src/app/page.tsx` — page d'accueil, liste des produits
-- `src/app/produits/[slug]/page.tsx` — fiche produit
-- `src/lib/db.ts` — client Neon
-- `src/lib/products.ts` — accès aux données produits
-- `sql/schema.sql` — schéma de la table `products` + jeu de données de démo
+1. `/api/checkout` relit les prix en base et crée la session Stripe.
+2. Le webhook `/api/webhooks/stripe` (`checkout.session.completed`) enregistre la
+   commande de façon atomique et idempotente, puis la transmet à CJdropshipping
+   (`src/lib/fulfillment.ts`). Les articles sont regroupés par route logistique,
+   un groupe = une commande CJ. En mode test Stripe, la commande CJ est sandbox.
+3. En cas d'erreur, le webhook répond 500 (Stripe rejoue l'événement) et une
+   alerte est émise (logs + `ALERT_WEBHOOK_URL` si défini).
+4. `/api/cron/supplier-sync` (Vercel Cron, quotidien, protégé par `CRON_SECRET`)
+   relance les commandes non transmises et rafraîchit statut et numéro de suivi,
+   affichés sur `/suivi-commande`.
+
+## À configurer côté services
+
+- Stripe : endpoint webhook vers `/api/webhooks/stripe`, événement `checkout.session.completed`.
+- Vercel : variables d'environnement de `.env.example`, dont `CRON_SECRET`.
+- Neon : rejouer `sql/schema.sql` après chaque déploiement qui l'a modifié.

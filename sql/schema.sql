@@ -1,5 +1,5 @@
 -- Schéma initial de la boutique Maison Bien-Être
--- À exécuter sur la base Neon (branche "production" par défaut, cf. .neon)
+-- À exécuter sur la base Neon (branche "production" par défaut)
 
 create table if not exists products (
   id serial primary key,
@@ -82,6 +82,14 @@ create table if not exists supplier_orders (
 );
 
 create index if not exists supplier_orders_order_id_idx on supplier_orders (order_id);
+
+-- Reprise automatique des commandes fournisseur : le téléphone client est
+-- conservé pour pouvoir relancer l'envoi chez CJdropshipping depuis la base, et
+-- chaque commande fournisseur porte son propre numéro (une commande client peut
+-- être scindée en plusieurs commandes CJ si les routes logistiques diffèrent).
+alter table orders add column if not exists customer_phone text;
+alter table supplier_orders add column if not exists order_number text;
+create index if not exists supplier_orders_order_number_idx on supplier_orders (order_number);
 
 -- Catalogue de démonstration initial retiré : remplacé par une sélection de
 -- produits réellement sourçables en dropshipping (voir migration ci-dessous).

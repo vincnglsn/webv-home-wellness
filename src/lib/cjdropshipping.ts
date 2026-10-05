@@ -92,3 +92,15 @@ export async function createCjOrder(input: CjCreateOrderInput) {
     body: JSON.stringify(body),
   });
 }
+
+export type CjOrderDetail = {
+  orderId: string;
+  orderStatus: string;
+  trackNumber?: string | null;
+};
+
+export async function getCjOrderDetail(orderId: string) {
+  return cjRequest<CjOrderDetail>(
+    `/v1/shopping/order/getOrderDetail?orderId=${encodeURIComponent(orderId)}`
+  );
+}

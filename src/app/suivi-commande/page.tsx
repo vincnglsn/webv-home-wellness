@@ -9,6 +9,7 @@ import type { OrderStatus } from "@/lib/orders";
 const STATUS_LABELS: Record<string, string> = {
   pending: "En attente de traitement",
   placed: "Commande transmise au fournisseur",
+  shipped: "Commande expédiée",
   failed: "Un problème est survenu, notre équipe a été notifiée",
 };
 
@@ -127,8 +128,7 @@ export default function SuiviCommandePage() {
               )}
               {!order.tracking_number && order.supplier_status === "placed" && (
                 <p className="mt-1 text-stone-600 dark:text-stone-400">
-                  Le numéro de suivi vous sera communiqué par e-mail dès l&apos;expédition du
-                  colis.
+                  Le numéro de suivi apparaîtra sur cette page dès l&apos;expédition du colis.
                 </p>
               )}
             </div>

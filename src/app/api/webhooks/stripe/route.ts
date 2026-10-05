@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { getStripe } from "@/lib/stripe";
 import { getSql } from "@/lib/db";
-import { createCjOrder } from "@/lib/cjdropshipping";
+import { fulfillOrder } from "@/lib/fulfillment";
+import { sendAlert } from "@/lib/alerts";
 
 // Stripe signe le corps brut de la requête : il ne faut donc jamais parser le
 // JSON avant vérification, sous peine d'invalider la signature.
@@ -31,185 +32,84 @@ export async function POST(request: NextRequest) {
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session;
     const mode = event.livemode ? "live" : "test";
-    const orderId = await recordOrder(stripe, session, mode);
-    if (orderId) {
-      await placeSupplierOrder(orderId, session, mode);
+    try {
+      const orderId = await recordOrder(stripe, session, mode);
+      await fulfillOrder(orderId);
+    } catch (err) {
+      // Réponse 500 : Stripe rejoue l'événement. recordOrder et fulfillOrder
+      // sont idempotents, un rejeu ne crée donc ni doublon ni double commande.
+      const message = err instanceof Error ? err.message : "Erreur inconnue";
+      await sendAlert(`Traitement du paiement ${session.id} (${mode}) en erreur : ${message}`);
+      return NextResponse.json({ error: "Traitement de la commande échoué" }, { status: 500 });
     }
   }
 
   return NextResponse.json({ received: true });
 }
 
+// Enregistre la commande et ses lignes en une seule instruction SQL (donc
+// atomique) et renvoie son id, y compris si elle existait déjà.
 async function recordOrder(
   stripe: Stripe,
   session: Stripe.Checkout.Session,
   mode: "test" | "live"
-): Promise<number | null> {
+): Promise<number> {
   const sql = getSql();
 
-  // Idempotence : un webhook Stripe peut être renvoyé plusieurs fois pour le
-  // même événement, on ignore silencieusement une session déjà enregistrée.
-  const existing = await sql`
-    select id from orders where stripe_checkout_session_id = ${session.id} limit 1
-  `;
-  if (existing.length > 0) return null;
-
   const lineItems = await stripe.checkout.sessions.listLineItems(session.id, {
+    limit: 100,
     expand: ["data.price.product"],
   });
 
-  const orderRows = (await sql`
-    insert into orders (
-      stripe_checkout_session_id,
-      stripe_payment_intent_id,
-      status,
-      mode,
-      amount_total_cents,
-      currency,
-      customer_email,
-      shipping_address
-    )
-    values (
-      ${session.id},
-      ${typeof session.payment_intent === "string" ? session.payment_intent : null},
-      'paid',
-      ${mode},
-      ${session.amount_total ?? 0},
-      ${(session.currency ?? "eur").toUpperCase()},
-      ${session.customer_details?.email ?? null},
-      ${session.collected_information?.shipping_details
-        ? JSON.stringify(session.collected_information.shipping_details)
-        : null}
-    )
-    returning id
-  `) as unknown as { id: number }[];
-
-  const orderId = orderRows[0].id;
-
-  for (const item of lineItems.data) {
+  const items = lineItems.data.map((item) => {
     const product =
       item.price?.product && typeof item.price.product === "object"
         ? (item.price.product as Stripe.Product)
         : null;
-    const slug = product?.metadata?.slug ?? null;
-
-    await sql`
-      insert into order_items (order_id, product_slug, name, unit_amount_cents, quantity, currency)
-      values (
-        ${orderId},
-        ${slug},
-        ${item.description ?? product?.name ?? "Produit"},
-        ${item.price?.unit_amount ?? 0},
-        ${item.quantity ?? 1},
-        ${(item.price?.currency ?? "eur").toUpperCase()}
-      )
-    `;
-  }
-
-  return orderId;
-}
-
-type ProductSupplierRow = {
-  slug: string;
-  cj_variant_id: string | null;
-  cj_sku: string | null;
-  cj_from_country_code: string;
-  cj_logistic_name: string;
-};
-
-async function placeSupplierOrder(
-  orderId: number,
-  session: Stripe.Checkout.Session,
-  mode: "test" | "live"
-) {
-  const sql = getSql();
-  const shipping = session.collected_information?.shipping_details;
-  const email = session.customer_details?.email ?? undefined;
-
-  if (!shipping?.address) {
-    await recordSupplierOrderFailure(orderId, mode, "Adresse de livraison manquante");
-    return;
-  }
-
-  const items = (await sql`
-    select product_slug, quantity from order_items where order_id = ${orderId}
-  `) as unknown as { product_slug: string | null; quantity: number }[];
-
-  const slugs = items.map((i) => i.product_slug).filter((s): s is string => Boolean(s));
-  if (slugs.length === 0) {
-    await recordSupplierOrderFailure(orderId, mode, "Aucun produit identifiable dans la commande");
-    return;
-  }
-
-  const products = (await sql`
-    select slug, cj_variant_id, cj_sku, cj_from_country_code, cj_logistic_name
-    from products
-    where slug = any(${slugs})
-  `) as unknown as ProductSupplierRow[];
-
-  const bySlug = new Map(products.map((p) => [p.slug, p]));
-  const missingSlugs = slugs.filter((slug) => {
-    const p = bySlug.get(slug);
-    return !p || (!p.cj_variant_id && !p.cj_sku);
-  });
-
-  if (missingSlugs.length > 0) {
-    await recordSupplierOrderFailure(
-      orderId,
-      mode,
-      `Produit(s) non reliés à CJdropshipping : ${missingSlugs.join(", ")}`
-    );
-    return;
-  }
-
-  const cjProducts = items.map((item) => {
-    const p = bySlug.get(item.product_slug as string)!;
     return {
-      vid: p.cj_variant_id ?? undefined,
-      sku: p.cj_sku ?? undefined,
-      quantity: item.quantity,
+      slug: product?.metadata?.slug ?? null,
+      name: item.description ?? product?.name ?? "Produit",
+      unit_amount_cents: item.price?.unit_amount ?? 0,
+      quantity: item.quantity ?? 1,
+      currency: (item.price?.currency ?? "eur").toUpperCase(),
     };
   });
 
-  // Tous les articles partagent normalement la même route logistique ; on
-  // prend celle du premier produit pour simplifier la commande fournisseur.
-  const firstProduct = bySlug.get(items[0].product_slug as string)!;
-
-  try {
-    const result = await createCjOrder({
-      orderNumber: session.id,
-      shippingCountryCode: shipping.address.country ?? "",
-      shippingCountry: shipping.address.country ?? "",
-      shippingProvince: shipping.address.state ?? shipping.address.city ?? "",
-      shippingCity: shipping.address.city ?? "",
-      shippingCustomerName: shipping.name ?? "Client",
-      shippingAddress: [shipping.address.line1, shipping.address.line2].filter(Boolean).join(" "),
-      shippingZip: shipping.address.postal_code ?? undefined,
-      shippingPhone: session.customer_details?.phone ?? undefined,
-      email,
-      fromCountryCode: firstProduct.cj_from_country_code,
-      logisticName: firstProduct.cj_logistic_name,
-      products: cjProducts,
-      // En mode test Stripe, on force systématiquement une commande CJ
-      // sandbox : jamais de vrai débit tant que le paiement client lui-même
-      // n'est pas réel.
-      isSandbox: mode !== "live",
-    });
-
-    await sql`
-      insert into supplier_orders (order_id, provider, provider_order_id, status, is_sandbox)
-      values (${orderId}, 'cjdropshipping', ${result.data.orderId}, 'placed', ${mode !== "live"})
-    `;
-  } catch (err) {
-    const message = err instanceof Error ? err.message : "Erreur CJdropshipping inconnue";
-    await recordSupplierOrderFailure(orderId, mode, message);
-  }
-}
-
-async function recordSupplierOrderFailure(orderId: number, mode: "test" | "live", message: string) {
-  const sql = getSql();
   await sql`
-    insert into supplier_orders (order_id, provider, status, error_message, is_sandbox)
-    values (${orderId}, 'cjdropshipping', 'failed', ${message}, ${mode !== "live"})
+    with new_order as (
+      insert into orders (
+        stripe_checkout_session_id, stripe_payment_intent_id, status, mode,
+        amount_total_cents, currency, customer_email, customer_phone, shipping_address
+      )
+      values (
+        ${session.id},
+        ${typeof session.payment_intent === "string" ? session.payment_intent : null},
+        'paid',
+        ${mode},
+        ${session.amount_total ?? 0},
+        ${(session.currency ?? "eur").toUpperCase()},
+        ${session.customer_details?.email ?? null},
+        ${session.customer_details?.phone ?? null},
+        ${
+          session.collected_information?.shipping_details
+            ? JSON.stringify(session.collected_information.shipping_details)
+            : null
+        }
+      )
+      on conflict (stripe_checkout_session_id) do nothing
+      returning id
+    )
+    insert into order_items (order_id, product_slug, name, unit_amount_cents, quantity, currency)
+    select new_order.id, i.slug, i.name, i.unit_amount_cents, i.quantity, i.currency
+    from new_order,
+      jsonb_to_recordset(${JSON.stringify(items)}::jsonb) as i(
+        slug text, name text, unit_amount_cents integer, quantity integer, currency text
+      )
   `;
+
+  const rows = (await sql`
+    select id from orders where stripe_checkout_session_id = ${session.id} limit 1
+  `) as unknown as { id: number }[];
+  if (!rows[0]) throw new Error(`Commande introuvable après enregistrement (${session.id})`);
+  return rows[0].id;
 }
