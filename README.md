@@ -38,6 +38,16 @@ psql "$DATABASE_URL" -f sql/schema.sql
    relance les commandes non transmises et rafraîchit statut et numéro de suivi,
    affichés sur `/suivi-commande`.
 
+## Conseiller IA (chatbot)
+
+Widget flottant (`src/components/ChatWidget.tsx`) branché sur `/api/chat`, qui appelle
+l'API Claude avec quatre outils (`src/lib/chat/tools.ts`) : recherche et fiche produit
+dans la base, affichage de cartes produit avec ajout au panier, et suivi de commande
+(numéro + e-mail exigés, comme `/suivi-commande`). Politique de livraison et de retours
+dans `src/lib/chat/prompt.ts`, à garder synchronisée avec `/retours` et `/cgv`.
+
+Variables : `ANTHROPIC_API_KEY` (obligatoire), `CHAT_MODEL` (optionnel, défaut `claude-opus-5-5`).
+
 ## À configurer côté services
 
 - Stripe : endpoint webhook vers `/api/webhooks/stripe`, événement `checkout.session.completed`.
