@@ -1625,3 +1625,8 @@ Ce que vous obtenez :
 • Housse seule, sans garnissage
 
 À associer à un coussin de 45 × 45 cm pour le canapé, le fauteuil ou la tête de lit.$$,1490,'https://cf.cjdropshipping.com/quick/product/2624f5a4-416c-4a93-b638-f0066feeeec5.jpg','decoration','murs-textiles','https://cjdropshipping.com/product/2507221004081606000.html','2507221004081606000','2507221004091603300','CJZT243702025YB','CJPacket Ordinary') on conflict (slug) do nothing;
+
+-- Retrait du produit "Photophore de Noel pommes de pin et baies" (2026-10-06) :
+-- la photo CJ portait un code fournisseur et des cotes. Ce delete est place apres
+-- l insert de la routine pour qu une reexecution du fichier ne recree pas le produit.
+delete from products where slug = 'photophore-noel-pommes-de-pin-dore';
