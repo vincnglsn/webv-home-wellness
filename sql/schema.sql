@@ -1630,3 +1630,7 @@ Ce que vous obtenez :
 -- la photo CJ portait un code fournisseur et des cotes. Ce delete est place apres
 -- l insert de la routine pour qu une reexecution du fichier ne recree pas le produit.
 delete from products where slug = 'photophore-noel-pommes-de-pin-dore';
+
+-- Baisse de prix (2026-10-06) : "Lot de 5 bandes de resistance bleues" passe de 23,90 EUR a 21,90 EUR
+-- (marge nette estimee 7,49 EUR, 34% du prix TTC). Place apres l insert de la routine.
+update products set price_cents = 2190 where slug = 'lot-5-bandes-resistance-bleues';
