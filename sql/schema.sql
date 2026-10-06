@@ -1585,3 +1585,43 @@ on conflict (slug) do update set
   cj_variant_id = excluded.cj_variant_id,
   cj_sku = excluded.cj_sku,
   cj_logistic_name = excluded.cj_logistic_name;
+
+-- Produits du 2026-10-05 (routine quotidienne) : masseur-nuque-chauffant-pliable (26,90 EUR, marge nette ~10,94 EUR / 40,7 %, YunExpress Sensitive 7,52 USD) ; photophore-noel-pommes-de-pin-dore (16,90 EUR, marge nette ~6,67 EUR / 39,5 %, CJPacket Ordinary 5,78 USD).
+insert into products (slug,name,description,price_cents,image_url,category,subcategory,supplier_url,cj_product_id,cj_variant_id,cj_sku,cj_logistic_name) values ('masseur-nuque-chauffant-pliable','Masseur de nuque chauffant pliable',$$Un masseur de nuque compact, avec chaleur douce et impulsions, à poser autour du cou pour un moment de détente.
+
+Ce que vous obtenez :
+• Un masseur nuque et épaules pliable, facile à ranger
+• Fonction chauffante (compresse chaude) et impulsions électriques
+• Recharge par USB, batterie 3,7 V
+• Programme de 15 minutes, dimensions : 19 × 12,5 × 6 cm
+
+Idéal pour une pause relaxante en fin de journée, à la maison ou au bureau.$$,2690,'https://cf.cjdropshipping.com/2f9755f6-b26a-4ea4-b23c-e06a24ead2a3.jpg','bien-etre','massage-detente','https://cjdropshipping.com/product/1565182475423461376.html','1565182475423461376','1565224232207003648','CJJT155400701AZ','YunExpress Sensitive') on conflict (slug) do nothing;
+insert into products (slug,name,description,price_cents,image_url,category,subcategory,supplier_url,cj_product_id,cj_variant_id,cj_sku,cj_logistic_name) values ('photophore-noel-pommes-de-pin-dore','Photophore de Noël pommes de pin et baies',$$Une couronne de table de Noël avec support de bougie chauffe-plat, pour une ambiance chaleureuse sur votre table ou votre buffet.
+
+Ce que vous obtenez :
+• Un photophore de table avec couronne de branches de sapin
+• Boules dorées, baies rouges et pommes de pin décoratives
+• Support pour bougie chauffe-plat (bougie non incluse)
+• Dimensions : environ 12 cm de diamètre, 6 cm de hauteur
+
+À poser sur une table de fête, une cheminée ou un meuble d'entrée.$$,1690,'https://cf.cjdropshipping.com/quick/product/93bb5923-7ac7-4fb9-8be2-fc72ab671963.jpg','decoration','noel','https://cjdropshipping.com/product/2410160653541616200.html','2410160653541616200','2410160653541616400','CJYD216158701AZ','CJPacket Ordinary') on conflict (slug) do nothing;
+
+-- Produits du 2026-10-06 (routine quotidienne) : lot-5-bandes-resistance-bleues (23,90 EUR, marge nette ~9,13 EUR / 38,2 %, YunExpress Ordinary 10,52 USD) ; housse-coussin-lin-coton-glands-kaki (14,90 EUR, marge nette ~5,87 EUR / 39,4 %, CJPacket Ordinary 5,41 USD).
+insert into products (slug,name,description,price_cents,image_url,category,subcategory,supplier_url,cj_product_id,cj_variant_id,cj_sku,cj_logistic_name) values ('lot-5-bandes-resistance-bleues','Lot de 5 bandes de résistance bleues',$$Cinq bandes élastiques en circuit fermé pour varier l'intensité de vos exercices, de la plus légère à la plus ferme.
+
+Ce que vous obtenez :
+• 5 bandes élastiques en boucle, en TPE
+• 5 niveaux de résistance, de X-Light à X-Heavy
+• Dégradé de bleus avec repères en étoiles pour s'y retrouver
+• Idéales pour le yoga, le pilates et les exercices au poids du corps
+
+À glisser autour des cuisses ou des chevilles pour vos séances de sport à la maison.$$,2390,'https://cf.cjdropshipping.com/quick/product/c329e03a-400a-4a5a-a840-4a79bfa5e9c4.jpg','bien-etre','sport-posture','https://cjdropshipping.com/product/2406150946491629000.html','2406150946491629000','2406150946501620000','CJYD206128406FU','YunExpress Ordinary') on conflict (slug) do nothing;
+insert into products (slug,name,description,price_cents,image_url,category,subcategory,supplier_url,cj_product_id,cj_variant_id,cj_sku,cj_logistic_name) values ('housse-coussin-lin-coton-glands-kaki','Housse de coussin coton et lin à glands, kaki',$$Une housse de coussin au tissage texturé, ornée de glands aux coins, pour apporter une touche naturelle au canapé ou au lit.
+
+Ce que vous obtenez :
+• Une housse carrée de 45 × 45 cm
+• Tissu coton et lin, coloris kaki
+• Glands décoratifs aux coins
+• Housse seule, sans garnissage
+
+À associer à un coussin de 45 × 45 cm pour le canapé, le fauteuil ou la tête de lit.$$,1490,'https://cf.cjdropshipping.com/quick/product/2624f5a4-416c-4a93-b638-f0066feeeec5.jpg','decoration','murs-textiles','https://cjdropshipping.com/product/2507221004081606000.html','2507221004081606000','2507221004091603300','CJZT243702025YB','CJPacket Ordinary') on conflict (slug) do nothing;
