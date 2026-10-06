@@ -1,12 +1,6 @@
-import Anthropic from "@anthropic-ai/sdk";
 import { NextRequest, NextResponse } from "next/server";
-import { SYSTEM_PROMPT } from "@/lib/chat/prompt";
-import { CHAT_TOOLS, runChatTool, type ChatProductCard } from "@/lib/chat/tools";
+import { answer, type ChatTurn } from "@/lib/chat/engine";
 
-export const maxDuration = 60;
-
-const MODEL = process.env.CHAT_MODEL || "claude-opus-5-5";
-const MAX_TOOL_ROUNDS = 6;
 const MAX_HISTORY = 20;
 const MAX_MESSAGE_CHARS = 1000;
 
@@ -26,8 +20,6 @@ function clientIp(request: NextRequest): string {
   return request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
 }
 
-type ChatTurn = { role: "user" | "assistant"; content: string };
-
 function parseHistory(body: unknown): ChatTurn[] | null {
   const raw = (body as { messages?: unknown })?.messages;
   if (!Array.isArray(raw)) return null;
@@ -45,10 +37,6 @@ function parseHistory(body: unknown): ChatTurn[] | null {
 }
 
 export async function POST(request: NextRequest) {
-  if (!process.env.ANTHROPIC_API_KEY) {
-    return NextResponse.json({ reply: FALLBACK_REPLY, products: [] }, { status: 503 });
-  }
-
   let body: unknown;
   try {
     body = await request.json();
@@ -65,9 +53,9 @@ export async function POST(request: NextRequest) {
   const entry = hits.get(ip) ?? { chat: [], orders: [] };
   entry.chat = recent(entry.chat, now);
   entry.orders = recent(entry.orders, now);
-  if (entry.chat.length >= 30) {
+  if (entry.chat.length >= 60) {
     return NextResponse.json(
-      { reply: "Vous avez posé beaucoup de questions d'affilée, merci de réessayer dans quelques minutes.", products: [] },
+      { reply: "Vous avez posé beaucoup de questions d'affilée, merci de réessayer dans quelques minutes.", products: [], suggestions: [] },
       { status: 429 }
     );
   }
@@ -75,76 +63,15 @@ export async function POST(request: NextRequest) {
   hits.set(ip, entry);
   if (hits.size > 5000) hits.clear();
 
-  const client = new Anthropic();
-  const cards = new Map<string, ChatProductCard>();
-  const messages: Anthropic.Beta.BetaMessageParam[] = history.map((t) => ({
-    role: t.role,
-    content: t.content,
-  }));
-
   try {
-    for (let round = 0; round < MAX_TOOL_ROUNDS; round++) {
-      const response = await client.beta.messages.create({
-        model: MODEL,
-        max_tokens: 2000,
-        betas: ["server-side-fallback-2026-07-01"],
-        fallbacks: "default",
-        system: SYSTEM_PROMPT,
-        output_config: { effort: "low" },
-        tools: CHAT_TOOLS as Anthropic.Beta.BetaTool[],
-        messages,
-      });
-
-      if (response.stop_reason === "refusal") {
-        return NextResponse.json({
-          reply: "Je ne peux pas répondre à cette demande. Pour toute autre question sur nos produits ou votre commande, je reste disponible.",
-          products: [],
-        });
-      }
-
-      if (response.stop_reason !== "tool_use") {
-        const text = response.content
-          .filter((b): b is Anthropic.Beta.BetaTextBlock => b.type === "text")
-          .map((b) => b.text)
-          .join("\n")
-          .trim();
-        return NextResponse.json({
-          reply: text || FALLBACK_REPLY,
-          products: Array.from(cards.values()),
-        });
-      }
-
-      // Les blocs de réflexion doivent être renvoyés tels quels pendant la boucle d'outils.
-      messages.push({ role: "assistant", content: response.content });
-
-      const results: Anthropic.Beta.BetaToolResultBlockParam[] = [];
-      for (const block of response.content) {
-        if (block.type !== "tool_use") continue;
-        const { content, isError } = await runChatTool(
-          block.name,
-          (block.input ?? {}) as Record<string, unknown>,
-          {
-            cards,
-            allowOrderLookup: () => {
-              if (entry.orders.length >= 8) return false;
-              entry.orders.push(Date.now());
-              return true;
-            },
-          }
-        );
-        results.push({ type: "tool_result", tool_use_id: block.id, content, is_error: isError });
-      }
-      messages.push({ role: "user", content: results });
-    }
-    return NextResponse.json({ reply: FALLBACK_REPLY, products: Array.from(cards.values()) });
+    const result = await answer(history, () => {
+      if (entry.orders.length >= 8) return false;
+      entry.orders.push(Date.now());
+      return true;
+    });
+    return NextResponse.json(result);
   } catch (error) {
-    if (error instanceof Anthropic.RateLimitError) {
-      console.error("[chat] limite de débit Anthropic", error.message);
-    } else if (error instanceof Anthropic.APIError) {
-      console.error(`[chat] erreur API ${error.status}`, error.message);
-    } else {
-      console.error("[chat] erreur inattendue", error);
-    }
-    return NextResponse.json({ reply: FALLBACK_REPLY, products: [] }, { status: 502 });
+    console.error("[chat] erreur", error);
+    return NextResponse.json({ reply: FALLBACK_REPLY, products: [], suggestions: [] }, { status: 500 });
   }
 }

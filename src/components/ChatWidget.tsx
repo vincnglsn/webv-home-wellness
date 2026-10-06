@@ -19,12 +19,13 @@ type ChatMessage = {
   role: "user" | "assistant";
   content: string;
   products?: ProductCard[];
+  suggestions?: string[];
 };
 
 const GREETING: ChatMessage = {
   role: "assistant",
   content:
-    "Bonjour, je suis le conseiller de Maison Bien-Être. Je peux vous aider à choisir un produit, suivre une commande ou répondre à vos questions sur la livraison et les retours.",
+    "Bonjour, je suis le conseiller de Maison Bien-Être. Je peux vous aider à choisir un produit, suivre une commande ou répondre à vos questions sur la livraison et les retours. Pour une question plus précise, écrivez-nous à contact@whatelsebyvinc.com.",
 };
 
 const SUGGESTIONS = [
@@ -83,6 +84,9 @@ export function ChatWidget() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
+  const lastMessage = messages[messages.length - 1];
+  const lastSuggestions =
+    messages.length === 1 ? SUGGESTIONS : lastMessage.role === "assistant" ? (lastMessage.suggestions ?? []) : [];
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
@@ -104,7 +108,11 @@ export function ChatWidget() {
           messages: next.slice(1).map(({ role, content }) => ({ role, content })),
         }),
       });
-      const data = (await res.json()) as { reply?: string; products?: ProductCard[] };
+      const data = (await res.json()) as {
+        reply?: string;
+        products?: ProductCard[];
+        suggestions?: string[];
+      };
       setMessages([
         ...next,
         {
@@ -113,6 +121,7 @@ export function ChatWidget() {
             data.reply ??
             "Je rencontre un souci technique. Écrivez-nous à contact@whatelsebyvinc.com.",
           products: data.products,
+          suggestions: data.suggestions,
         },
       ]);
     } catch {
@@ -163,9 +172,9 @@ export function ChatWidget() {
                 )}
               </div>
             ))}
-            {messages.length === 1 && (
+            {!loading && (lastSuggestions.length > 0) && (
               <div className="flex flex-wrap gap-2">
-                {SUGGESTIONS.map((s) => (
+                {lastSuggestions.map((s) => (
                   <button
                     key={s}
                     type="button"
@@ -177,7 +186,7 @@ export function ChatWidget() {
                 ))}
               </div>
             )}
-            {loading && <p className="text-sm text-stone-500">Le conseiller écrit…</p>}
+            {loading && <p className="text-sm text-stone-500">Recherche en cours…</p>}
             <div ref={endRef} />
           </div>
           <form

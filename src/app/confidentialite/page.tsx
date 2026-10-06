@@ -38,22 +38,6 @@ export default function ConfidentialitePage() {
             </p>
           </section>
           <section>
-            <h2 className="mb-2 font-semibold text-stone-900 dark:text-stone-50">
-              Conseiller virtuel (chat)
-            </h2>
-            <p>
-              Le conseiller virtuel du site est propulsé par l&apos;intelligence artificielle de
-              notre prestataire Anthropic. Les messages que vous lui écrivez lui sont transmis pour
-              générer ses réponses. Si vous demandez le suivi d&apos;une commande, le numéro de
-              commande et l&apos;adresse e-mail que vous saisissez sont utilisés pour retrouver
-              cette commande, puis transmis à Anthropic avec le reste de la conversation. Nous vous
-              recommandons de ne pas y communiquer d&apos;autres données personnelles (adresse,
-              téléphone, moyen de paiement). Nous ne conservons pas l&apos;historique de la
-              conversation : il disparaît à la fermeture de la page. Vous pouvez aussi suivre votre
-              commande sans passer par le chat, sur la page Suivi de commande.
-            </p>
-          </section>
-          <section>
             <h2 className="mb-2 font-semibold text-stone-900 dark:text-stone-50">Conservation</h2>
             <p>
               Les données liées aux commandes sont conservées pendant la durée légale de
