@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { GUIDES } from "@/lib/guides";
 import { getCategoryTree, getProducts, SITE_URL } from "@/lib/products";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -13,6 +14,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       { url: `${SITE_URL}/cgv`, changeFrequency: "yearly", priority: 0.1 },
       { url: `${SITE_URL}/confidentialite`, changeFrequency: "yearly", priority: 0.1 },
       { url: `${SITE_URL}/retours`, changeFrequency: "yearly", priority: 0.2 },
+      { url: `${SITE_URL}/livraison`, changeFrequency: "yearly", priority: 0.3 },
+      { url: `${SITE_URL}/faq`, changeFrequency: "yearly", priority: 0.4 },
+      { url: `${SITE_URL}/guides`, changeFrequency: "monthly", priority: 0.5 },
+      ...GUIDES.map((guide) => ({
+        url: `${SITE_URL}/guides/${guide.slug}`,
+        changeFrequency: "monthly" as const,
+        priority: 0.5,
+      })),
     ] as const
   ).map((route) => ({ ...route, lastModified: new Date() }));
 

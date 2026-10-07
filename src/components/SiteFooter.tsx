@@ -10,6 +10,15 @@ export function SiteFooter() {
         <Link href="/contact" className="hover:underline">
           Contact
         </Link>
+        <Link href="/guides" className="hover:underline">
+          Guides
+        </Link>
+        <Link href="/faq" className="hover:underline">
+          FAQ
+        </Link>
+        <Link href="/livraison" className="hover:underline">
+          Livraison
+        </Link>
         <Link href="/suivi-commande" className="hover:underline">
           Suivi de commande
         </Link>
