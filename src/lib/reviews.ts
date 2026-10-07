@@ -20,6 +20,34 @@ export async function getPublishedReviews(slug: string): Promise<Review[]> {
   `) as unknown as Review[];
 }
 
+export type AdminReview = Review & {
+  product_slug: string;
+  order_id: number;
+  status: "pending" | "published" | "rejected";
+};
+
+export async function listReviews(): Promise<AdminReview[]> {
+  const sql = getSql();
+  return (await sql`
+    select id, product_slug, order_id, display_name, rating, body, status, created_at
+    from reviews
+    order by created_at desc
+    limit 200
+  `) as unknown as AdminReview[];
+}
+
+// Renvoie le slug du produit concerné (pour rafraîchir sa fiche), ou null.
+export async function setReviewStatus(
+  id: number,
+  status: "pending" | "published" | "rejected"
+): Promise<string | null> {
+  const sql = getSql();
+  const rows = (await sql`
+    update reviews set status = ${status} where id = ${id} returning product_slug
+  `) as unknown as { product_slug: string }[];
+  return rows[0]?.product_slug ?? null;
+}
+
 export function summarize(reviews: Review[]): ReviewSummary | null {
   if (reviews.length === 0) return null;
   const total = reviews.reduce((sum, review) => sum + review.rating, 0);
