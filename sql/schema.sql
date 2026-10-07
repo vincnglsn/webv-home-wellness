@@ -1634,3 +1634,25 @@ delete from products where slug = 'photophore-noel-pommes-de-pin-dore';
 -- Baisse de prix (2026-10-06) : "Lot de 5 bandes de resistance bleues" passe de 23,90 EUR a 21,90 EUR
 -- (marge nette estimee 7,49 EUR, 34% du prix TTC). Place apres l insert de la routine.
 update products set price_cents = 2190 where slug = 'lot-5-bandes-resistance-bleues';
+
+-- Produits du 2026-10-07 (routine quotidienne) : rouleau de massage pieds (28,90 EUR, marge nette 11,20 EUR / 38,8 %, Yunexpress CN to Multi-Region 5-10 j) ; mini sapin Noel (16,90 EUR, marge nette 6,78 EUR / 40 %, CJPacket Ordinary 4-10 j)
+insert into products (slug,name,description,price_cents,image_url,category,subcategory,supplier_url,cj_product_id,cj_variant_id,cj_sku,cj_logistic_name) values
+($$rouleau-massage-pieds-roulettes$$,$$Rouleau de massage pour les pieds à roulettes$$,$$Un rouleau de massage pour les deux pieds, à glisser sous le bureau ou devant le canapé pour une pause détente.
+
+Ce que vous obtenez :
+• 1 rouleau de massage plantaire à roulettes et picots
+• Un massage des deux pieds en même temps
+• Une base antidérapante pour un usage stable et silencieux
+• Un modèle lavable, simple à entretenir
+
+Posez les pieds dessus et faites-les rouler d'avant en arrière, à la maison comme au bureau.$$,2890,$$https://cf.cjdropshipping.com/67c4dc59-ddb3-4410-b8b2-886059813dea.jpg$$,$$bien-etre$$,$$massage-detente$$,$$https://cjdropshipping.com/product/1710221612786012160.html$$,$$1710221612786012160$$,$$1710221612823760896$$,$$CJYS186389401AZ$$,$$Yunexpress CN to Multi-Region$$),
+($$mini-sapin-noel-noeud-jute$$,$$Mini sapin de Noël décoratif avec noeud en jute$$,$$Un petit sapin de Noël de 21 cm à poser ou à suspendre, pour apporter une touche festive à une étagère, une table ou un bureau.
+
+Ce que vous obtenez :
+• 1 mini sapin décoratif de 21 cm de haut, en PE et mousse
+• Un grand noeud en toile de jute et une boucle de suspension
+• Des détails festifs : sucre d'orge en chenille, flocons et petites boules
+• Un format compact, facile à glisser dans un coin de la maison
+
+À poser sur un meuble ou à accrocher à une porte, une fenêtre ou une poignée pour l'ambiance de Noël.$$,1690,$$https://cf.cjdropshipping.com/quick/product/27ffe42f-fb7d-4f3b-a6c8-3515590a1220.jpg$$,$$decoration$$,$$noel$$,$$https://cjdropshipping.com/product/2510240339121612300.html$$,$$2510240339121612300$$,$$2510240339121612500$$,$$CJYS256826101AZ$$,$$CJPacket Ordinary$$)
+on conflict (slug) do nothing;
