@@ -17,6 +17,8 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { JsonLd } from "@/components/JsonLd";
 import { ProductGrid } from "@/components/ProductGrid";
 import { SiteLogo } from "@/components/SiteLogo";
+import { ReviewForm } from "@/components/ReviewForm";
+import { getPublishedReviews, summarize } from "@/lib/reviews";
 
 export const revalidate = 60;
 
@@ -64,7 +66,11 @@ export default async function ProductPage({
 
   const relatedProducts = await getRelatedProducts(product).catch(() => []);
 
-  const productUrl = `${SITE_URL}/produits/${product.slug}`;
+  // La table des avis peut ne pas exister encore : la fiche reste affichée sans.
+  const reviews = await getPublishedReviews(product.slug).catch(() => []);
+  const reviewSummary = summarize(reviews);
+
+  const productUrl =`${SITE_URL}/produits/${product.slug}`;
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
@@ -102,6 +108,23 @@ export default async function ProductPage({
     name: product.name,
     description: descriptionExcerpt(product.description, 500),
     ...(product.image_url ? { image: [product.image_url] } : {}),
+    // Note moyenne publiée uniquement si de vrais avis modérés existent.
+    ...(reviewSummary
+      ? {
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: reviewSummary.average,
+            reviewCount: reviewSummary.count,
+          },
+          review: reviews.map((review) => ({
+            "@type": "Review",
+            author: { "@type": "Person", name: review.display_name },
+            datePublished: new Date(review.created_at).toISOString().slice(0, 10),
+            reviewBody: review.body,
+            reviewRating: { "@type": "Rating", ratingValue: review.rating, bestRating: 5 },
+          })),
+        }
+      : {}),
     offers: {
       "@type": "Offer",
       url: productUrl,
@@ -187,6 +210,45 @@ export default async function ProductPage({
             />
           </div>
         </div>
+
+        <section className="mt-16 border-t border-stone-200 pt-12 dark:border-stone-800">
+          <h2 className="mb-4 text-lg font-serif font-semibold text-stone-900 dark:text-stone-50">
+            Avis clients
+            {reviewSummary && (
+              <span className="ml-2 text-sm font-normal text-stone-500">
+                {reviewSummary.average.toFixed(1).replace(".", ",")}/5 · {reviewSummary.count} avis
+              </span>
+            )}
+          </h2>
+          {reviews.length === 0 ? (
+            <p className="mb-4 text-sm text-stone-600 dark:text-stone-400">
+              Pas encore d&apos;avis sur ce produit.
+            </p>
+          ) : (
+            <ul className="mb-6 flex flex-col gap-4">
+              {reviews.map((review) => (
+                <li
+                  key={review.id}
+                  className="rounded-xl border border-stone-200 bg-white p-4 dark:border-stone-800 dark:bg-stone-900"
+                >
+                  <p className="text-amber-500" aria-label={`${review.rating} sur 5`}>
+                    {"★".repeat(review.rating)}
+                    <span className="text-stone-300 dark:text-stone-700">
+                      {"★".repeat(5 - review.rating)}
+                    </span>
+                  </p>
+                  <p className="mt-1 whitespace-pre-line text-stone-700 dark:text-stone-300">
+                    {review.body}
+                  </p>
+                  <p className="mt-2 text-xs text-stone-500">
+                    {review.display_name} · achat vérifié
+                  </p>
+                </li>
+              ))}
+            </ul>
+          )}
+          <ReviewForm slug={product.slug} />
+        </section>
 
         {relatedProducts.length > 0 && (
           <section className="mt-16 border-t border-stone-200 pt-12 dark:border-stone-800">
