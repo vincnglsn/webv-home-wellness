@@ -1,4 +1,4 @@
-import { getProducts, categoryLabel, subcategoryLabel, SITE_URL } from "@/lib/products";
+import { getProductsForFeed, categoryLabel, subcategoryLabel, SITE_URL } from "@/lib/products";
 
 // Flux produit au format RSS 2.0 avec l'espace de noms Google (g:), accepté tel
 // quel par Google Merchant Center, Pinterest (catalogues) et Meta (Facebook et
@@ -26,7 +26,7 @@ function xml(value: string): string {
 export async function GET() {
   let products;
   try {
-    products = await getProducts();
+    products = await getProductsForFeed();
   } catch {
     return new Response("Catalogue indisponible", { status: 503 });
   }
@@ -37,6 +37,11 @@ export async function GET() {
       const productType = [categoryLabel(p.category), p.subcategory ? subcategoryLabel(p.subcategory) : null]
         .filter(Boolean)
         .join(" > ");
+      // Photos supplémentaires de la galerie (10 au maximum selon Google), hors photo principale.
+      const extraImages = (Array.isArray(p.images) ? p.images : [])
+        .filter((url) => url && url !== p.image_url)
+        .slice(0, 10)
+        .map((url) => `      <g:additional_image_link>${xml(url)}</g:additional_image_link>`);
       return [
         "    <item>",
         `      <g:id>${xml(p.slug)}</g:id>`,
@@ -44,6 +49,7 @@ export async function GET() {
         `      <description>${xml(p.description.trim().slice(0, 5000))}</description>`,
         `      <link>${xml(`${SITE_URL}/produits/${p.slug}`)}</link>`,
         p.image_url ? `      <g:image_link>${xml(p.image_url)}</g:image_link>` : null,
+        ...extraImages,
         `      <g:availability>${p.in_stock ? "in_stock" : "out_of_stock"}</g:availability>`,
         `      <g:price>${xml(price)}</g:price>`,
         "      <g:condition>new</g:condition>",

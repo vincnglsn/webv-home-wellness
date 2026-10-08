@@ -6,8 +6,46 @@ import { CategoryNav } from "@/components/CategoryNav";
 import { CategoryCards } from "@/components/CategoryCards";
 import { GroupedProductGrid } from "@/components/ProductGrid";
 import { SiteLogo } from "@/components/SiteLogo";
+import { JsonLd } from "@/components/JsonLd";
+import type { Metadata } from "next";
+import { SITE_URL } from "@/lib/products";
 
 export const revalidate = 60;
+
+const HOME_TITLE = "Maison Bien-Être — Décoration et bien-être pour la maison";
+const HOME_DESCRIPTION =
+  "Objets de décoration et de bien-être choisis pour un intérieur serein : lumières, textiles, massage, sommeil. Livraison offerte en France, Belgique, Suisse et Luxembourg, retours sous 14 jours.";
+
+export const metadata: Metadata = {
+  title: { absolute: HOME_TITLE },
+  description: HOME_DESCRIPTION,
+  alternates: { canonical: SITE_URL },
+  openGraph: {
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
+    url: SITE_URL,
+    siteName: "Maison Bien-Être",
+    locale: "fr_FR",
+    type: "website",
+  },
+};
+
+const siteJsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Maison Bien-Être",
+    url: SITE_URL,
+    email: "contact@whatelsebyvinc.com",
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "Maison Bien-Être",
+    url: SITE_URL,
+    inLanguage: "fr-FR",
+  },
+];
 
 export default async function Home() {
   let products: Product[] = [];
@@ -22,6 +60,9 @@ export default async function Home() {
 
   return (
     <div className="flex flex-1 flex-col bg-stone-50 dark:bg-stone-950">
+      {siteJsonLd.map((data) => (
+        <JsonLd key={data["@type"]} data={data} />
+      ))}
       <header className="border-b border-stone-200 dark:border-stone-800">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-6">
           <SiteLogo />
