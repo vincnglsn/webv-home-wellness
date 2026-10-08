@@ -70,6 +70,17 @@ export async function getProducts(): Promise<Product[]> {
   `) as unknown as Product[];
 }
 
+// Même liste que getProducts, avec la galerie de photos : réservé au flux produits, pour ne
+// pas alourdir les pages du site.
+export async function getProductsForFeed(): Promise<Product[]> {
+  const sql = getSql();
+  return (await sql`
+    select id, slug, name, description, price_cents, currency, image_url, category, subcategory, in_stock, images
+    from products
+    order by id
+  `) as unknown as Product[];
+}
+
 export async function getProductBySlug(slug: string): Promise<Product | null> {
   const sql = getSql();
   const rows = (await sql`
