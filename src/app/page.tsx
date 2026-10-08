@@ -80,35 +80,32 @@ export default async function Home() {
       </header>
 
       <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-12">
-        <section className="relative mb-8 overflow-hidden rounded-2xl bg-gradient-to-br from-amber-100 via-stone-100 to-stone-200 px-6 py-6 text-center sm:px-10 sm:py-8 dark:from-stone-800 dark:via-stone-900 dark:to-stone-950">
-          <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-amber-700 dark:text-amber-400">
-            Maison Bien-Être
-          </p>
-          <h1 className="mx-auto max-w-2xl text-2xl font-serif font-semibold leading-tight text-stone-900 sm:text-3xl dark:text-stone-50">
+        <section className="relative mb-8 overflow-hidden rounded-2xl bg-gradient-to-br from-amber-100 via-stone-100 to-stone-200 px-5 py-4 text-center sm:px-8 dark:from-stone-800 dark:via-stone-900 dark:to-stone-950">
+          <h1 className="text-xl font-serif font-semibold leading-tight text-stone-900 sm:text-2xl dark:text-stone-50">
             Une maison apaisée, un quotidien plus doux
           </h1>
-          <p className="mx-auto mt-2 max-w-xl text-sm text-stone-700 sm:text-base dark:text-stone-300">
-            Une sélection d&apos;objets de bien-être et de décoration pour créer un intérieur serein.
+          <p className="mt-1 text-sm text-stone-700 dark:text-stone-300">
+            Une sélection d&apos;objets de bien-être et de décoration pour un intérieur serein.
           </p>
-          <div className="mt-4 flex flex-col items-center justify-center gap-2 sm:flex-row sm:gap-3">
+          <div className="mt-3 flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
             <a
               href="#catalogue"
-              className="rounded-full bg-stone-900 px-5 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-stone-700 dark:bg-stone-50 dark:text-stone-900 dark:hover:bg-stone-200"
+              className="rounded-full bg-stone-900 px-4 py-1.5 text-sm font-medium text-white shadow-sm transition hover:bg-stone-700 dark:bg-stone-50 dark:text-stone-900 dark:hover:bg-stone-200"
             >
               Découvrir la boutique
             </a>
             <Link
               href="/guides/idees-cadeaux-noel-maison"
-              className="rounded-full border border-stone-400 px-5 py-2 text-sm font-medium text-stone-900 transition hover:bg-white/60 dark:border-stone-600 dark:text-stone-50 dark:hover:bg-stone-800"
+              className="rounded-full border border-stone-400 px-4 py-1.5 text-sm font-medium text-stone-900 transition hover:bg-white/60 dark:border-stone-600 dark:text-stone-50 dark:hover:bg-stone-800"
             >
               Idées cadeaux de Noël
             </Link>
+            <ul className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-stone-700 dark:text-stone-300">
+              <li>🚚 Livraison offerte</li>
+              <li>↩️ Retours sous 14 jours</li>
+              <li>🔒 Paiement sécurisé</li>
+            </ul>
           </div>
-          <ul className="mt-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-1 text-xs text-stone-700 dark:text-stone-300">
-            <li>🚚 Livraison offerte</li>
-            <li>↩️ Retours sous 14 jours</li>
-            <li>🔒 Paiement sécurisé</li>
-          </ul>
         </section>
 
         {dbError && (
