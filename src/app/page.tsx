@@ -4,7 +4,8 @@ import { CartHeaderLink } from "@/components/CartHeaderLink";
 import { SiteFooter } from "@/components/SiteFooter";
 import { CategoryNav } from "@/components/CategoryNav";
 import { CategoryCards } from "@/components/CategoryCards";
-import { GroupedProductGrid } from "@/components/ProductGrid";
+import { GroupedProductGrid, ProductGrid } from "@/components/ProductGrid";
+import { GUIDES } from "@/lib/guides";
 import { SiteLogo } from "@/components/SiteLogo";
 import { JsonLd } from "@/components/JsonLd";
 import type { Metadata } from "next";
@@ -58,6 +59,11 @@ export default async function Home() {
     dbError = true;
   }
 
+  const newArrivals = products
+    .filter((product) => product.in_stock)
+    .sort((a, b) => b.id - a.id)
+    .slice(0, 4);
+
   return (
     <div className="flex flex-1 flex-col bg-stone-50 dark:bg-stone-950">
       {siteJsonLd.map((data) => (
@@ -74,14 +80,35 @@ export default async function Home() {
       </header>
 
       <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-12">
-        <section className="mb-12 text-center">
-          <h1 className="text-3xl font-serif font-semibold text-stone-900 dark:text-stone-50">
+        <section className="relative mb-14 overflow-hidden rounded-3xl bg-gradient-to-br from-amber-100 via-stone-100 to-stone-200 px-6 py-14 text-center sm:px-12 sm:py-20 dark:from-stone-800 dark:via-stone-900 dark:to-stone-950">
+          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-amber-700 dark:text-amber-400">
+            Maison Bien-Être
+          </p>
+          <h1 className="mx-auto max-w-2xl text-4xl font-serif font-semibold leading-tight text-stone-900 sm:text-5xl dark:text-stone-50">
             Une maison apaisée, un quotidien plus doux
           </h1>
-          <p className="mx-auto mt-3 max-w-xl text-stone-600 dark:text-stone-400">
-            Une sélection d&apos;objets de bien-être et de décoration pour créer
-            un intérieur serein.
+          <p className="mx-auto mt-4 max-w-xl text-lg text-stone-700 dark:text-stone-300">
+            Une sélection d&apos;objets de bien-être et de décoration pour créer un intérieur serein.
           </p>
+          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <a
+              href="#catalogue"
+              className="rounded-full bg-stone-900 px-7 py-3 font-medium text-white shadow-sm transition hover:bg-stone-700 dark:bg-stone-50 dark:text-stone-900 dark:hover:bg-stone-200"
+            >
+              Découvrir la boutique
+            </a>
+            <Link
+              href="/guides/idees-cadeaux-noel-maison"
+              className="rounded-full border border-stone-400 px-7 py-3 font-medium text-stone-900 transition hover:bg-white/60 dark:border-stone-600 dark:text-stone-50 dark:hover:bg-stone-800"
+            >
+              Idées cadeaux de Noël
+            </Link>
+          </div>
+          <ul className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-sm text-stone-700 dark:text-stone-300">
+            <li>🚚 Livraison offerte</li>
+            <li>↩️ Retours sous 14 jours</li>
+            <li>🔒 Paiement sécurisé</li>
+          </ul>
         </section>
 
         {dbError && (
@@ -96,7 +123,25 @@ export default async function Home() {
           <>
             <CategoryCards tree={tree} products={products} />
 
-            <CategoryNav tree={tree} />
+            {newArrivals.length > 0 && (
+              <section className="mb-14">
+                <div className="mb-5 flex items-end justify-between">
+                  <div>
+                    <h2 className="font-serif text-xl font-semibold text-stone-900 dark:text-stone-50">
+                      Nouveautés
+                    </h2>
+                    <p className="mt-1 text-sm text-stone-600 dark:text-stone-400">
+                      Les derniers objets ajoutés à la boutique.
+                    </p>
+                  </div>
+                </div>
+                <ProductGrid products={newArrivals} />
+              </section>
+            )}
+
+            <div id="catalogue" className="scroll-mt-6">
+              <CategoryNav tree={tree} />
+            </div>
 
             {products.length === 0 ? (
               <p className="text-stone-500">Aucun produit disponible pour le moment.</p>
@@ -105,6 +150,28 @@ export default async function Home() {
             )}
           </>
         )}
+
+        <section className="mt-16 border-t border-stone-200 pt-12 dark:border-stone-800">
+          <h2 className="font-serif text-xl font-semibold text-stone-900 dark:text-stone-50">
+            Guides et idées
+          </h2>
+          <p className="mt-1 mb-5 text-sm text-stone-600 dark:text-stone-400">
+            Pour décorer, offrir et aménager la maison.
+          </p>
+          <ul className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            {GUIDES.map((guide) => (
+              <li key={guide.slug}>
+                <Link
+                  href={`/guides/${guide.slug}`}
+                  className="flex h-full flex-col rounded-xl border border-stone-200 bg-white p-5 transition hover:shadow-md dark:border-stone-800 dark:bg-stone-900"
+                >
+                  <span className="font-semibold text-stone-900 dark:text-stone-50">{guide.title}</span>
+                  <span className="mt-2 text-sm text-stone-600 dark:text-stone-400">{guide.description}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
 
         <section className="mt-16 grid grid-cols-1 gap-8 border-t border-stone-200 pt-12 text-center sm:grid-cols-3 dark:border-stone-800">
           <div>
