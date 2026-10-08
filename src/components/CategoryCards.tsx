@@ -1,6 +1,16 @@
 import Link from "next/link";
-import Image from "next/image";
 import type { CategoryTree, Product } from "@/lib/products";
+import { RotatingImage } from "@/components/RotatingImage";
+
+// Nombre maximum de photos qui défilent par encart.
+const MAX_ROTATING = 12;
+
+function pushImage(map: Map<string, string[]>, key: string, url: string | null) {
+  if (!url) return;
+  const list = map.get(key) ?? [];
+  if (list.length < MAX_ROTATING && !list.includes(url)) list.push(url);
+  map.set(key, list);
+}
 
 export function CategoryCards({
   tree,
@@ -9,22 +19,14 @@ export function CategoryCards({
   tree: CategoryTree[];
   products: Product[];
 }) {
-  const imageByCategory = new Map<string, string | null>();
+  // Photos des produits en stock, par catégorie et par sous-catégorie, pour le défilement.
+  const imagesByCategory = new Map<string, string[]>();
+  const imagesBySubcategory = new Map<string, string[]>();
   for (const product of products) {
-    if (!imageByCategory.has(product.category)) {
-      imageByCategory.set(product.category, product.image_url);
-    }
-  }
-
-  const imageBySubcategory = new Map<string, string | null>();
-  for (const product of products) {
-    const key = `${product.category}/${product.subcategory}`;
-    if (
-      product.subcategory &&
-      product.image_url &&
-      !imageBySubcategory.has(key)
-    ) {
-      imageBySubcategory.set(key, product.image_url);
+    if (!product.in_stock) continue;
+    pushImage(imagesByCategory, product.category, product.image_url);
+    if (product.subcategory) {
+      pushImage(imagesBySubcategory, `${product.category}/${product.subcategory}`, product.image_url);
     }
   }
   const subcategories = tree.flatMap((entry) =>
@@ -44,23 +46,20 @@ export function CategoryCards({
           </p>
         </div>
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-          {tree.map((entry) => {
-            const image = imageByCategory.get(entry.category);
+          {tree.map((entry, entryIndex) => {
+            const images = imagesByCategory.get(entry.category) ?? [];
             return (
               <Link
                 key={entry.category}
                 href={`/categorie/${entry.category}`}
                 className="group relative flex h-48 items-end overflow-hidden rounded-2xl border border-stone-200 bg-stone-200 dark:border-stone-800 dark:bg-stone-800"
               >
-                {image && (
-                  <Image
-                    src={image}
-                    alt=""
-                    fill
-                    sizes="(max-width: 640px) 100vw, 50vw"
-                    className="scale-110 object-cover transition duration-300 group-hover:scale-125"
-                  />
-                )}
+                <RotatingImage
+                  images={images}
+                  offset={entryIndex}
+                  sizes="(max-width: 640px) 100vw, 50vw"
+                  className="scale-110 object-cover transition duration-300 group-hover:scale-125"
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
                 <div className="relative z-10 flex w-full items-center justify-between px-6 py-5">
                   <div>
@@ -92,25 +91,21 @@ export function CategoryCards({
             </p>
           </div>
           <div className="grid grid-cols-2 gap-5 sm:grid-cols-4">
-            {subcategories.map((sub) => {
-              const image = imageBySubcategory.get(
-                `${sub.category}/${sub.subcategory}`,
-              );
+            {subcategories.map((sub, subIndex) => {
+              const images =
+                imagesBySubcategory.get(`${sub.category}/${sub.subcategory}`) ?? [];
               return (
                 <Link
                   key={`${sub.category}/${sub.subcategory}`}
                   href={`/categorie/${sub.category}/${sub.subcategory}`}
                   className="group relative flex h-32 items-end overflow-hidden rounded-xl border border-stone-200 bg-stone-200 dark:border-stone-800 dark:bg-stone-800"
                 >
-                  {image && (
-                    <Image
-                      src={image}
-                      alt=""
-                      fill
-                      sizes="(max-width: 640px) 50vw, 25vw"
-                      className="scale-110 object-cover transition duration-300 group-hover:scale-125"
-                    />
-                  )}
+                  <RotatingImage
+                    images={images}
+                    offset={subIndex + 2}
+                    sizes="(max-width: 640px) 50vw, 25vw"
+                    className="scale-110 object-cover transition duration-300 group-hover:scale-125"
+                  />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
                   <div className="relative z-10 px-4 py-3">
                     <p className="font-serif text-base font-semibold text-white">

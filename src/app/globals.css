@@ -32,3 +32,23 @@ body {
     bottom: 5rem;
   }
 }
+
+/* Fondu enchaîné des photos qui défilent dans les encarts de catégories. */
+@keyframes tile-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.tile-fade {
+  animation: tile-fade 1s ease-in-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tile-fade {
+    animation: none;
+  }
+}
