@@ -18,6 +18,8 @@ import { JsonLd } from "@/components/JsonLd";
 import { ProductGrid } from "@/components/ProductGrid";
 import { SiteLogo } from "@/components/SiteLogo";
 import { ReviewForm } from "@/components/ReviewForm";
+import { AnnouncementBar, ProductDetailV2 } from "@/components/ProductDetailV2";
+import { usesNewLayout } from "@/lib/product-sections";
 import { getPublishedReviews, summarize } from "@/lib/reviews";
 
 export const revalidate = 60;
@@ -69,6 +71,8 @@ export default async function ProductPage({
   // La table des avis peut ne pas exister encore : la fiche reste affichée sans.
   const reviews = await getPublishedReviews(product.slug).catch(() => []);
   const reviewSummary = summarize(reviews);
+
+  const newLayout = usesNewLayout(product.slug);
 
   const productUrl =`${SITE_URL}/produits/${product.slug}`;
 
@@ -140,6 +144,7 @@ export default async function ProductPage({
     <div className="flex flex-1 flex-col bg-stone-50 dark:bg-stone-950">
       <JsonLd data={breadcrumbJsonLd} />
       <JsonLd data={productJsonLd} />
+      {newLayout && <AnnouncementBar />}
       <header className="border-b border-stone-200 dark:border-stone-800">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-6">
           <SiteLogo />
@@ -152,7 +157,12 @@ export default async function ProductPage({
         </div>
       </header>
 
-      <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-12">
+      <main
+        className={`mx-auto w-full max-w-5xl flex-1 px-6 py-12 ${newLayout ? "pb-28 md:pb-12" : ""}`}
+      >
+        {newLayout ? (
+          <ProductDetailV2 product={product} />
+        ) : (
         <div className="grid gap-10 md:grid-cols-2">
           <div className="relative flex h-80 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-amber-50 to-stone-200 text-stone-400 dark:from-stone-800 dark:to-stone-900">
             {product.image_url ? (
@@ -210,6 +220,7 @@ export default async function ProductPage({
             />
           </div>
         </div>
+        )}
 
         <section className="mt-16 border-t border-stone-200 pt-12 dark:border-stone-800">
           <h2 className="mb-4 text-lg font-serif font-semibold text-stone-900 dark:text-stone-50">
