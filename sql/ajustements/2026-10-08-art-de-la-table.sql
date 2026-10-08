@@ -1,4 +1,4 @@
--- Vague du 2026-10-08 : 7 décors de table toutes saisons (catégorie decoration, sous-catégorie art-de-la-table).
+-- Vague du 2026-10-08 : 6 décors de table toutes saisons (catégorie decoration, sous-catégorie art-de-la-table).
 -- Prix calculés avec une marge nette >= 35 % du prix TTC (coût total de livraison CJ inclus).
 
 insert into products (slug, name, description, price_cents, image_url, images, category, subcategory, supplier_url, cj_product_id, cj_variant_id, cj_sku, cj_logistic_name) values ('chemin-de-table-macrame-franges-nouees', 'Chemin de Table Macramé à Franges Nouées (30 x 180 cm)', 'Un chemin de table naturel à bande centrale tissée et franges nouées façon macramé, qui réchauffe une table de repas ou un buffet en toute saison.
@@ -19,7 +19,6 @@ Ce que vous obtenez :
 • Se drape librement : plis, retombées sur les côtés, noeuds
 
 À poser sur une table de fête, de brunch ou de tous les jours, avec des fleurs, des bougies et de la vaisselle blanche.', 1890, 'https://cf.cjdropshipping.com/quick/product/ca671c2e-9f35-456f-81d6-d71bb71cc4c9.jpg', null, 'decoration', 'art-de-la-table', 'https://cjdropshipping.com/product/2406081338021602100.html', '2406081338021602100', '2406081338021606400', 'CJYD205636514NM', 'CJPacket Ordinary E') on conflict (slug) do nothing;
-insert into products (slug, name, description, price_cents, image_url, images, category, subcategory, supplier_url, cj_product_id, cj_variant_id, cj_sku, cj_logistic_name) values ('lot-6-sets-de-table-ronds-herbe-tressee', 'Lot de 6 Sets de Table Ronds en Herbe Tressée à Franges (25 cm)', 'Six petits sets de table ronds en herbe tressée, bordés de franges blanches, pour dresser une table chaleureuse et naturelle.
 
 Ce que vous obtenez :
 • Lot de 6 sets de table ronds d''environ 25 cm de diamètre
@@ -65,3 +64,4 @@ Ce que vous obtenez :
 • Vendu seul (les assiettes, tasses et gourmandises des photos ne sont pas inclus)
 
 À poser sur la table du petit déjeuner ou du goûter, ou sur une console comme vide-poche élégant.', 2190, 'https://cf.cjdropshipping.com/quick/product/aed6d106-8aa9-4233-94f8-61c1bd576a7b.jpg', '["https://cf.cjdropshipping.com/quick/product/aed6d106-8aa9-4233-94f8-61c1bd576a7b.jpg","https://cf.cjdropshipping.com/quick/product/ab6b62f3-73d2-47c2-97e5-e29931df6a2c.jpg","https://cf.cjdropshipping.com/quick/product/397adb53-0be5-4f43-9cc5-e035c42afff4.jpg"]'::jsonb, 'decoration', 'art-de-la-table', 'https://cjdropshipping.com/product/1796803153220874240.html', '1796803153220874240', '1796803153308954624', 'CJYD205138501AZ', 'CJPacket Ordinary E') on conflict (slug) do nothing;
+-- Retiré le jour même : « Lot de 6 sets de table ronds en herbe tressée (25 cm) », jugé trop petit ; aucun équivalent en 40 cm chez CJ (seulement 38 cm à l'unité, 21,90 €).
