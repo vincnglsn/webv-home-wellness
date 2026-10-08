@@ -25,3 +25,10 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* La barre d'achat mobile de la page produit passe sous la bulle de chat. */
+@media (max-width: 767px) {
+  body:has([data-sticky-buy-bar]) [data-chat-launcher] {
+    bottom: 5rem;
+  }
+}

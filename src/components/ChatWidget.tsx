@@ -218,6 +218,7 @@ export function ChatWidget() {
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-label={open ? "Fermer le conseiller" : "Ouvrir le conseiller"}
+        data-chat-launcher
         className="fixed bottom-5 right-5 z-50 rounded-full bg-stone-900 px-5 py-3 text-sm font-medium text-white shadow-lg hover:bg-stone-800 dark:bg-stone-100 dark:text-stone-900"
       >
         {open ? "Fermer" : "Une question ?"}

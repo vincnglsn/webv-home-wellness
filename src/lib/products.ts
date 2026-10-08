@@ -11,6 +11,8 @@ export type Product = {
   category: string;
   subcategory: string | null;
   in_stock: boolean;
+  // Galerie de photos (colonne facultative), chargée seulement sur la fiche produit.
+  images?: string[] | null;
 };
 
 export const CATEGORY_LABELS: Record<string, string> = {
@@ -71,7 +73,7 @@ export async function getProducts(): Promise<Product[]> {
 export async function getProductBySlug(slug: string): Promise<Product | null> {
   const sql = getSql();
   const rows = (await sql`
-    select id, slug, name, description, price_cents, currency, image_url, category, subcategory, in_stock
+    select id, slug, name, description, price_cents, currency, image_url, category, subcategory, in_stock, images
     from products
     where slug = ${slug}
     limit 1

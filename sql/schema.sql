@@ -1656,3 +1656,6 @@ Ce que vous obtenez :
 
 À poser sur un meuble ou à accrocher à une porte, une fenêtre ou une poignée pour l'ambiance de Noël.$$,1690,$$https://cf.cjdropshipping.com/quick/product/27ffe42f-fb7d-4f3b-a6c8-3515590a1220.jpg$$,$$decoration$$,$$noel$$,$$https://cjdropshipping.com/product/2510240339121612300.html$$,$$2510240339121612300$$,$$2510240339121612500$$,$$CJYS256826101AZ$$,$$CJPacket Ordinary$$)
 on conflict (slug) do nothing;
+
+-- Galerie de photos des fiches produit (tableau JSON d'URL ; voir sql/ajustements/2026-10-08-galerie-images.sql).
+alter table products add column if not exists images jsonb;
