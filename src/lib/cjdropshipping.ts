@@ -114,6 +114,15 @@ export async function createCjOrder(input: CjCreateOrderInput) {
   });
 }
 
+// Paie une commande CJ avec le solde du compte CJdropshipping. Pour une commande
+// sandbox, CJ simule le paiement (aucun débit réel). Échoue si le solde est insuffisant.
+export async function payCjOrderWithBalance(orderId: string) {
+  return cjRequest<null>("/v1/shopping/pay/payBalance", {
+    method: "POST",
+    body: JSON.stringify({ orderId }),
+  });
+}
+
 export type CjOrderDetail = {
   orderId: string;
   orderStatus: string;

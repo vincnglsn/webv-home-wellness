@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { retryUnfulfilledOrders, syncTracking } from "@/lib/fulfillment";
+import { payPendingSupplierOrders, retryUnfulfilledOrders, syncTracking } from "@/lib/fulfillment";
 import { sendAlert } from "@/lib/alerts";
 
 // Les appels CJ sont espacés d'1,1 s : on laisse jusqu'à 60 s à la tâche.
@@ -15,13 +15,14 @@ export async function GET(request: NextRequest) {
 
   try {
     const retry = await retryUnfulfilledOrders();
+    const payments = await payPendingSupplierOrders();
     const tracking = await syncTracking();
     if (retry.stillFailing > 0) {
       await sendAlert(
         `${retry.stillFailing} commande(s) payée(s) toujours non transmise(s) à CJdropshipping après relance.`
       );
     }
-    return NextResponse.json({ retry, tracking });
+    return NextResponse.json({ retry, payments, tracking });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Erreur inconnue";
     await sendAlert(`Tâche de synchronisation fournisseur en erreur : ${message}`);
