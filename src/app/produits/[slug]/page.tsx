@@ -19,7 +19,7 @@ import { ProductGrid } from "@/components/ProductGrid";
 import { SiteLogo } from "@/components/SiteLogo";
 import { ReviewForm } from "@/components/ReviewForm";
 import { AnnouncementBar, ProductDetailV2 } from "@/components/ProductDetailV2";
-import { usesNewLayout } from "@/lib/product-sections";
+import { galleryImages as galleryImagesFor, usesNewLayout } from "@/lib/product-sections";
 import { getPublishedReviews, summarize } from "@/lib/reviews";
 
 export const revalidate = 60;
@@ -73,6 +73,8 @@ export default async function ProductPage({
   const reviewSummary = summarize(reviews);
 
   const newLayout = usesNewLayout(product.slug);
+  const galleryImages = newLayout ? galleryImagesFor(product.slug, product.image_url) : [];
+  const COUNTRIES = ["FR", "BE", "CH", "LU"];
 
   const productUrl =`${SITE_URL}/produits/${product.slug}`;
 
@@ -111,7 +113,12 @@ export default async function ProductPage({
     "@type": "Product",
     name: product.name,
     description: descriptionExcerpt(product.description, 500),
-    ...(product.image_url ? { image: [product.image_url] } : {}),
+    ...(galleryImages.length > 0
+      ? { image: galleryImages }
+      : product.image_url
+        ? { image: [product.image_url] }
+        : {}),
+    brand: { "@type": "Brand", name: "Maison Bien-Être" },
     // Note moyenne publiée uniquement si de vrais avis modérés existent.
     ...(reviewSummary
       ? {
@@ -134,6 +141,23 @@ export default async function ProductPage({
       url: productUrl,
       priceCurrency: product.currency,
       price: (product.price_cents / 100).toFixed(2),
+      // Livraison offerte et retours sous 14 jours : voir les pages Livraison et Livraison & retours.
+      shippingDetails: {
+        "@type": "OfferShippingDetails",
+        shippingRate: { "@type": "MonetaryAmount", value: "0", currency: "EUR" },
+        shippingDestination: COUNTRIES.map((addressCountry) => ({
+          "@type": "DefinedRegion",
+          addressCountry,
+        })),
+      },
+      hasMerchantReturnPolicy: {
+        "@type": "MerchantReturnPolicy",
+        applicableCountry: COUNTRIES,
+        returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+        merchantReturnDays: 14,
+        returnMethod: "https://schema.org/ReturnByMail",
+        returnFees: "https://schema.org/ReturnFeesCustomerResponsibility",
+      },
       availability: product.in_stock
         ? "https://schema.org/InStock"
         : "https://schema.org/OutOfStock",
@@ -161,7 +185,7 @@ export default async function ProductPage({
         className={`mx-auto w-full max-w-5xl flex-1 px-6 py-12 ${newLayout ? "pb-28 md:pb-12" : ""}`}
       >
         {newLayout ? (
-          <ProductDetailV2 product={product} />
+          <ProductDetailV2 product={product} images={galleryImages} reviewSummary={reviewSummary} />
         ) : (
         <div className="grid gap-10 md:grid-cols-2">
           <div className="relative flex h-80 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-amber-50 to-stone-200 text-stone-400 dark:from-stone-800 dark:to-stone-900">
@@ -222,7 +246,7 @@ export default async function ProductPage({
         </div>
         )}
 
-        <section className="mt-16 border-t border-stone-200 pt-12 dark:border-stone-800">
+        <section id="avis" className="mt-16 scroll-mt-6 border-t border-stone-200 pt-12 dark:border-stone-800">
           <h2 className="mb-4 text-lg font-serif font-semibold text-stone-900 dark:text-stone-50">
             Avis clients
             {reviewSummary && (
