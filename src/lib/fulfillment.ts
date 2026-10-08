@@ -1,5 +1,5 @@
 import { getSql } from "@/lib/db";
-import { createCjOrder, getCjOrderDetail } from "@/lib/cjdropshipping";
+import { createCjOrder, getCjOrderDetail, payCjOrderWithBalance } from "@/lib/cjdropshipping";
 import { sendAlert } from "@/lib/alerts";
 
 type OrderRow = {
@@ -65,6 +65,39 @@ async function recordFailure(
   await sendAlert(
     `Commande #${orderId} (${isSandbox ? "test" : "LIVE"}) : échec de l'envoi chez CJdropshipping (${orderNumber}) — ${message}`
   );
+}
+
+const PAYMENT_PENDING_PREFIX = "Paiement CJ en attente : ";
+
+// Paie sur le solde CJ une commande fournisseur déjà créée. En cas d'échec (solde
+// insuffisant, par exemple), la commande reste à payer : on l'écrit dans error_message
+// pour la relancer chaque jour, et on n'envoie l'alerte qu'une fois par motif.
+async function payCjSupplierOrder(
+  rowId: number,
+  cjOrderId: string,
+  orderId: number,
+  isSandbox: boolean,
+  amountDue?: number | null
+): Promise<boolean> {
+  const sql = getSql();
+  try {
+    await payCjOrderWithBalance(cjOrderId);
+    await sql`update supplier_orders set error_message = null, updated_at = now() where id = ${rowId}`;
+    return true;
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Erreur de paiement CJdropshipping";
+    const marker = `${PAYMENT_PENDING_PREFIX}${message}`;
+    const rows = (await sql`select error_message from supplier_orders where id = ${rowId}`) as unknown as {
+      error_message: string | null;
+    }[];
+    if (rows[0]?.error_message !== marker) {
+      await sql`update supplier_orders set error_message = ${marker}, updated_at = now() where id = ${rowId}`;
+      await sendAlert(
+        `Commande #${orderId} (${isSandbox ? "test" : "LIVE"}) créée chez CJdropshipping mais NON payée${amountDue ? ` (${amountDue.toFixed(2)} $ à régler)` : ""} : ${message}. Elle partira dès que le solde CJ couvrira ce montant (idéalement avec l'argent du client une fois reçu de Stripe). Bouton « Payer maintenant » sur /admin/commandes.`
+      );
+    }
+    return false;
+  }
 }
 
 // Transmet une commande payée à CJdropshipping. Idempotent : peut être rappelé
@@ -177,6 +210,7 @@ export async function fulfillOrder(orderId: number): Promise<void> {
         limit 1
       `) as unknown as { id: number }[];
 
+      let supplierRowId: number;
       if (failed[0]) {
         await sql`
           update supplier_orders
@@ -184,12 +218,20 @@ export async function fulfillOrder(orderId: number): Promise<void> {
               error_message = null, updated_at = now()
           where id = ${failed[0].id}
         `;
+        supplierRowId = failed[0].id;
       } else {
-        await sql`
+        const inserted = (await sql`
           insert into supplier_orders (order_id, provider, provider_order_id, status, is_sandbox, order_number)
           values (${orderId}, 'cjdropshipping', ${result.data.orderId}, 'placed', ${isSandbox}, ${orderNumber})
-        `;
+          returning id
+        `) as unknown as { id: number }[];
+        supplierRowId = inserted[0].id;
       }
+
+      // La commande CJ est créée « à payer » : on la règle tout de suite sur le solde CJ.
+      const amountDue =
+        (Number(result.data.productAmount) || 0) + (Number(result.data.postageAmount) || 0);
+      await payCjSupplierOrder(supplierRowId, result.data.orderId, orderId, isSandbox, amountDue || null);
     } catch (err) {
       const message = err instanceof Error ? err.message : "Erreur CJdropshipping inconnue";
       await recordFailure(orderId, orderNumber, isSandbox, message);
@@ -222,6 +264,47 @@ export async function retryUnfulfilledOrders(): Promise<{ retried: number; still
     if (left.length > 0) stillFailing += 1;
   }
   return { retried: rows.length, stillFailing };
+}
+
+// Relance le paiement des commandes créées chez CJ mais restées à payer (solde rechargé depuis).
+export async function payPendingSupplierOrders(): Promise<{ checked: number; paid: number }> {
+  const sql = getSql();
+  const rows = (await sql`
+    select id, order_id, provider_order_id, is_sandbox
+    from supplier_orders
+    where status = 'placed'
+      and provider_order_id is not null
+      and error_message like ${PAYMENT_PENDING_PREFIX + "%"}
+      and created_at > now() - interval '14 days'
+    order by id
+    limit 20
+  `) as unknown as { id: number; order_id: number; provider_order_id: string; is_sandbox: boolean }[];
+
+  let paid = 0;
+  for (const row of rows) {
+    if (await payCjSupplierOrder(row.id, row.provider_order_id, row.order_id, row.is_sandbox)) paid += 1;
+  }
+  return { checked: rows.length, paid };
+}
+
+export type PendingPayment = {
+  order_id: number;
+  order_number: string | null;
+  is_sandbox: boolean;
+  created_at: string;
+};
+
+// Commandes créées chez CJ et restées à payer (pour l'écran d'administration).
+export async function listPendingPayments(): Promise<PendingPayment[]> {
+  const sql = getSql();
+  return (await sql`
+    select order_id, order_number, is_sandbox, created_at
+    from supplier_orders
+    where status = 'placed'
+      and provider_order_id is not null
+      and error_message like ${PAYMENT_PENDING_PREFIX + "%"}
+    order by id
+  `) as unknown as PendingPayment[];
 }
 
 const CJ_SHIPPED = new Set(["SHIPPED", "DELIVERED", "COMPLETED"]);
