@@ -31,6 +31,7 @@ export const SUBCATEGORY_LABELS: Record<string, string> = {
   "soin-rituel": "Soin & Rituel",
   "murs-textiles": "Murs & Textiles",
   "objets-zen": "Objets Zen",
+  "art-de-la-table": "Art de la table",
   halloween: "Halloween",
   noel: "Noël",
 };
