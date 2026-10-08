@@ -32,28 +32,9 @@ export function parseDescription(description: string): ProductSections {
   return { hook, benefits, usage };
 }
 
-// Slugs qui utilisent le nouveau gabarit de page produit. Phase de test : on
-// l'étend au catalogue entier une fois le rendu validé.
-export const NEW_LAYOUT_SLUGS = new Set<string>(["lanterne-halloween-retro-citrouille"]);
-
-export function usesNewLayout(slug: string): boolean {
-  return NEW_LAYOUT_SLUGS.has(slug);
-}
-
-// Galeries de photos choisies à la main parmi celles de CJ (uniquement la variante
-// vendue). La première photo est celle de la fiche ; la dernière porte les cotes.
-// Pour le reste du catalogue, une colonne en base remplacera cette liste.
-const GALLERY_IMAGES: Record<string, string[]> = {
-  "lanterne-halloween-retro-citrouille": [
-    "https://cf.cjdropshipping.com/quick/product/0d345fdc-9bea-4ded-8b16-3ca1e9eaeda8.jpg",
-    "https://cf.cjdropshipping.com/886284c6-c9df-41f7-94f1-7d70f4512802.jpg",
-    "https://cf.cjdropshipping.com/fd64f0e7-c798-47d0-aca5-eeb1dd0a2343.jpg",
-    "https://cf.cjdropshipping.com/129186d4-97b2-424a-b712-f145d7d1a568.jpg",
-  ],
-};
-
-export function galleryImages(slug: string, mainImage: string | null): string[] {
-  const curated = GALLERY_IMAGES[slug];
-  if (curated && curated.length > 0) return curated;
+// Photos de la galerie : la colonne `images` de la base (choisies à la main parmi celles
+// de CJ, variante vendue uniquement) ou, à défaut, la photo principale du produit.
+export function galleryImages(images: string[] | null | undefined, mainImage: string | null): string[] {
+  if (Array.isArray(images) && images.length > 0) return images;
   return mainImage ? [mainImage] : [];
 }
