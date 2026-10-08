@@ -108,7 +108,12 @@ export async function createCjOrder(input: CjCreateOrderInput) {
     isSandbox: input.isSandbox ? 1 : 0,
   };
 
-  return cjRequest<{ orderId: string; orderNum: string }>("/v1/shopping/order/createOrderV3", {
+  return cjRequest<{
+    orderId: string;
+    orderNum: string;
+    productAmount?: number | null;
+    postageAmount?: number | null;
+  }>("/v1/shopping/order/createOrderV3", {
     method: "POST",
     body: JSON.stringify(body),
   });
@@ -121,6 +126,12 @@ export async function payCjOrderWithBalance(orderId: string) {
     method: "POST",
     body: JSON.stringify({ orderId }),
   });
+}
+
+// Solde disponible du compte CJdropshipping (en dollars).
+export async function getCjBalance(): Promise<number> {
+  const res = await cjRequest<{ amount?: number }>("/v1/shopping/pay/getBalance");
+  return Number(res.data?.amount ?? 0);
 }
 
 export type CjOrderDetail = {
