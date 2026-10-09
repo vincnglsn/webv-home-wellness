@@ -735,8 +735,8 @@ gratuite).
 
 Une tâche planifiée Claude Code (l'application doit être ouverte) exécute chaque jour à 7 h :
 
-1. **Choisir** une sous-catégorie par catégorie (la moins fournie ; les saisonnières en saison).
-2. **Chercher** chez CJ un produit éligible par catégorie (section 7).
+1. **Dresser la liste des sous-catégories actives** du jour (les saisonnières seulement dans leur période) : la routine ajoute **un produit dans CHAQUE sous-catégorie**, et non un par grande catégorie (erreur corrigée le 9 octobre).
+2. **Chercher** chez CJ un produit éligible pour chacune, l'une après l'autre, avec un plafond d'exploration (3 recherches, 4 produits examinés) et un fichier JSON mis à jour après chaque sous-catégorie pour ne rien perdre en cas d'interruption (section 7).
 3. **Contrôler** la photo (téléchargée et regardée), la livraison, le prix et la marge.
 4. **Rédiger** la fiche (format 6.2) et **insérer** en base (galerie comprise), puis **ajouter à « My Products »**.
 5. **Tracer** dans `sql/routine/AAAA-MM-JJ.sql`, ouvrir une PR (et la fusionner seule si elle ne modifie que ce
