@@ -158,6 +158,211 @@ export const GUIDES: Guide[] = [
       { category: "decoration", subcategory: "murs-textiles" },
     ],
   },
+  {
+    slug: "decoration-noel-petit-budget",
+    title: "Décoration de Noël à petit budget : 8 idées sous 25 €",
+    description:
+      "Comment décorer sa maison pour Noël sans dépenser beaucoup : lumières LED, objets à suspendre, textiles et astuces pour choisir.",
+    publishedAt: "2026-10-09",
+    intro:
+      "Une belle décoration de Noël ne demande pas un gros budget : quelques objets bien choisis, une lumière chaude et un peu d'organisation suffisent. Voici par où commencer.",
+    sections: [
+      {
+        heading: "1. Commencer par la lumière",
+        paragraphs: [
+          "C'est l'élément qui change le plus l'ambiance pour le moins cher : une guirlande lumineuse, une lanterne à bougie LED ou un rideau lumineux à la fenêtre. Les modèles LED chauffent peu et évitent le risque lié à la flamme.",
+        ],
+      },
+      {
+        heading: "2. Miser sur de petits sapins",
+        paragraphs: [
+          "Pas la place pour un grand sapin ? Un mini sapin sur un bureau, une console ou une table basse suffit à installer l'esprit de Noël. On peut en répartir un par pièce.",
+        ],
+      },
+      {
+        heading: "3. Habiller les portes et les fenêtres",
+        paragraphs: [
+          "Une couronne de porte, une étoile en cordage ou une suspension en velours se voient de loin et donnent le ton dès l'entrée. Ce sont des objets que l'on range facilement et que l'on ressort chaque année.",
+        ],
+      },
+      {
+        heading: "4. Un coin pour les enfants",
+        paragraphs: [
+          "Un calendrier de l'Avent en tissu à remplir soi-même, une grande chaussette à suspendre : ces objets créent un rituel quotidien en décembre, sans racheter un calendrier jetable chaque année.",
+        ],
+      },
+      {
+        heading: "5. Quelques textiles de saison",
+        paragraphs: [
+          "Une housse de coussin à motif de sapins change un canapé en cinq minutes. Elle se range à plat et se remplace sans effort le reste de l'année.",
+        ],
+      },
+      {
+        heading: "6. Rester sur deux ou trois couleurs",
+        paragraphs: [
+          "Rouge et blanc, vert et or, ou bleu et argent : limiter la palette donne un résultat cohérent même avec des objets de provenances différentes.",
+        ],
+      },
+      {
+        heading: "7. Choisir des objets réutilisables",
+        paragraphs: [
+          "Mieux vaut une dizaine d'objets que l'on garde dix ans qu'une décoration jetable. Regardez les matières et les finitions plutôt que le seul prix.",
+        ],
+      },
+      {
+        heading: "8. Commander à temps",
+        paragraphs: [
+          "Nos produits sont expédiés depuis les entrepôts de nos fournisseurs, avec un délai moyen de 7 à 20 jours ouvrés. Pour décorer début décembre, commandez dès la fin octobre ou en novembre. La livraison est offerte en France, en Belgique, en Suisse et au Luxembourg.",
+        ],
+      },
+    ],
+    productsHeading: "Notre sélection de Noël",
+    products: [{ category: "decoration", subcategory: "noel" }],
+  },
+  {
+    slug: "dresser-une-belle-table-sans-se-ruiner",
+    title: "Dresser une belle table sans se ruiner : chemin, nappe et plateaux",
+    description:
+      "Nappe, chemin de table, dessous de verre, plateaux : comment habiller une table de repas ou de fête avec quelques pièces bien choisies.",
+    publishedAt: "2026-10-09",
+    intro:
+      "Une table réussie tient souvent à trois choses : une base textile, quelques matières naturelles et une touche de lumière. Pas besoin d'une vaisselle neuve pour changer l'effet.",
+    sections: [
+      {
+        heading: "Choisir la base : nappe ou chemin de table",
+        paragraphs: [
+          "Une nappe habille toute la table et cache un plateau abîmé. Un chemin de table, plus léger, laisse voir le bois et convient aux tables que l'on aime montrer. Vérifiez les dimensions : le chemin doit dépasser de chaque côté d'environ 20 à 30 cm.",
+        ],
+      },
+      {
+        heading: "Jouer avec les matières naturelles",
+        paragraphs: [
+          "Lin, coton gaufré, bois, céramique : ces matières s'accordent entre elles et restent élégantes d'une saison à l'autre. Les franges et les nœuds de style macramé ajoutent du relief sans surcharger.",
+        ],
+      },
+      {
+        heading: "Protéger la table au quotidien",
+        paragraphs: [
+          "Des dessous de verre en céramique ou un set de table rond évitent les cernes et les rayures. Un lot de plusieurs pièces dans un support se range facilement et se pose sur la table basse comme sur la table de repas.",
+        ],
+      },
+      {
+        heading: "Utiliser des plateaux pour servir et regrouper",
+        paragraphs: [
+          "Un petit plateau en bois permet de servir des biscuits, un café ou des amuse-bouches, et de regrouper bougies et vase au centre de la table pour un effet ordonné.",
+        ],
+      },
+      {
+        heading: "Ajouter une lumière douce",
+        paragraphs: [
+          "Des bougies LED ou une petite lanterne au centre donnent une ambiance chaleureuse sans risque. Évitez d'en mettre trop : trois éléments de hauteurs différentes suffisent.",
+        ],
+      },
+      {
+        heading: "Penser à l'entretien",
+        paragraphs: [
+          "Regardez les consignes de lavage de chaque textile avant d'acheter, et rangez nappes et chemins à plat ou roulés pour éviter les plis. Les matières naturelles se froissent : c'est normal et fait partie de leur charme.",
+        ],
+      },
+    ],
+    productsHeading: "Pour habiller votre table",
+    products: [
+      { category: "decoration", subcategory: "art-de-la-table" },
+      { category: "decoration", subcategory: "murs-textiles" },
+    ],
+  },
+  {
+    slug: "choisir-et-accrocher-une-tenture-murale",
+    title: "Tenture murale : comment la choisir et l'accrocher sans percer",
+    description:
+      "Taille, style, matière et fixation : nos conseils pour choisir une tenture murale et l'installer proprement, même en location.",
+    publishedAt: "2026-10-09",
+    intro:
+      "Une tenture murale, c'est la façon la plus simple de donner du caractère à un mur nu. Voici comment éviter les erreurs de taille et d'accrochage.",
+    sections: [
+      {
+        heading: "1. Choisir la bonne taille",
+        paragraphs: [
+          "Au-dessus d'un canapé ou d'un lit, la tenture doit couvrir environ les deux tiers de la largeur du meuble. Une petite pièce sur un grand mur paraît perdue : en cas de doute, prenez plus grand.",
+        ],
+      },
+      {
+        heading: "2. Choisir un style qui vous ressemble",
+        paragraphs: [
+          "Forêt, montagne, tarot, mandala, bohème : choisissez un motif qui vous plaît vraiment, car c'est lui que vous verrez chaque jour. Pour une pièce déjà chargée, préférez un motif simple et des teintes proches de celles de la pièce.",
+        ],
+      },
+      {
+        heading: "3. Regarder la matière",
+        paragraphs: [
+          "Un tissu léger se drape facilement, mais peut garder des plis après le transport. Un coup de vapeur ou un passage au fer doux, en suivant les consignes, suffit en général.",
+        ],
+      },
+      {
+        heading: "4. Accrocher sans percer",
+        paragraphs: [
+          "Des crochets adhésifs, des bandes de fixation ou des punaises fines permettent d'installer une tenture sans abîmer un mur de location. Pour une grande pièce, répartissez les points de fixation sur tout le haut.",
+        ],
+      },
+      {
+        heading: "5. Compléter avec des textiles et des plantes",
+        paragraphs: [
+          "Une tenture s'accorde bien avec une housse de coussin, un plaid et une suspension pour plantes : reprenez deux couleurs, pas plus, pour garder un ensemble cohérent.",
+        ],
+      },
+    ],
+    productsHeading: "Nos tentures et textiles",
+    products: [{ category: "decoration", subcategory: "murs-textiles" }],
+  },
+  {
+    slug: "creer-une-ambiance-zen-a-la-maison",
+    title: "Créer une ambiance zen à la maison : encens, thé, lumières et objets",
+    description:
+      "Quelques idées simples pour installer une ambiance calme chez soi : encens, thé, bougeoirs, objets décoratifs et petits rituels.",
+    publishedAt: "2026-10-09",
+    intro:
+      "Une ambiance zen ne demande ni grande pièce ni gros budget : un peu de lumière, quelques objets en matières naturelles et un moment à soi chaque jour.",
+    sections: [
+      {
+        heading: "Commencer par désencombrer",
+        paragraphs: [
+          "Dégagez une surface : une étagère, un coin de table. Un petit nombre d'objets bien disposés rend l'espace plus calme qu'une accumulation.",
+        ],
+      },
+      {
+        heading: "Choisir des matières naturelles",
+        paragraphs: [
+          "Céramique, bois, laiton, pierre : ces matières s'associent facilement et vieillissent bien. Un brûle-encens en céramique ou un bol en palissandre donne un point d'ancrage visuel à un coin de pièce.",
+        ],
+      },
+      {
+        heading: "Faire une place à l'encens",
+        paragraphs: [
+          "Utilisez l'encens avec modération et aérez toujours après usage. Posez le brûleur sur une surface stable, à l'écart des textiles et hors de portée des enfants et des animaux.",
+        ],
+      },
+      {
+        heading: "Un moment thé",
+        paragraphs: [
+          "Un pot à thé en céramique et une tasse avec infuseur transforment une pause en petit rituel. Quelques minutes sans écran suffisent pour en faire un repère dans la journée.",
+        ],
+      },
+      {
+        heading: "Une lumière douce le soir",
+        paragraphs: [
+          "Bougeoirs, boules lumineuses et lampes à lumière chaude remplacent avantageusement le plafonnier en fin de journée. Les modèles LED évitent tout risque lié à la flamme.",
+        ],
+      },
+      {
+        heading: "Un décor qui évoque la nature",
+        paragraphs: [
+          "Une branche décorative, un vase aux lignes simples, une pyramide en pierre : quelques éléments évoquant la nature suffisent à adoucir une pièce. Ce sont des objets de décoration, sans effet particulier sur la santé.",
+        ],
+      },
+    ],
+    productsHeading: "Pour votre coin zen",
+    products: [{ category: "decoration", subcategory: "objets-zen" }],
+  },
 ];
 
 export function getGuide(slug: string): Guide | undefined {
