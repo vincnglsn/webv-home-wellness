@@ -321,7 +321,8 @@ export function getSql() {
 
 - **2 catégories** (champ `category`) : ici `decoration` (affichée « Maison ») et `bien-etre`.
 - **Sous-catégories** (champ `subcategory`, 6 à 10 au total) : ici `halloween`, `noel`, `murs-textiles`,
-  `objets-zen`, `art-de-la-table`, `massage-detente`, `soin-rituel`, `sommeil-repos`, `sport-posture`.
+  `objets-zen`, `ambiance-cocon`, `art-de-la-table`, `massage-detente` (affichée « Relaxation & Anti-stress »),
+  `soin-rituel`, `sommeil-repos` (affichée « Sommeil & Nuit Douce »), `sport-posture`.
 - Les libellés affichés sont dans `SUBCATEGORY_LABELS` et `CATEGORY_LABELS` (`src/lib/products.ts`).
   **Ajouter un libellé dans le code et le mettre en ligne AVANT d'insérer des produits** dans une nouvelle
   sous-catégorie, sinon le site affiche le slug brut (« art-de-la-table »).

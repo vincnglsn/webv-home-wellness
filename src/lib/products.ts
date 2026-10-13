@@ -25,12 +25,13 @@ export const CATEGORY_LABELS: Record<string, string> = {
 const CATEGORY_ORDER = ["decoration", "bien-etre"];
 
 export const SUBCATEGORY_LABELS: Record<string, string> = {
-  "massage-detente": "Massage & Détente",
-  "sommeil-repos": "Sommeil & Repos",
+  "massage-detente": "Relaxation & Anti-stress",
+  "sommeil-repos": "Sommeil & Nuit Douce",
   "sport-posture": "Sport & Posture",
   "soin-rituel": "Soin & Rituel",
   "murs-textiles": "Murs & Textiles",
   "objets-zen": "Objets Zen",
+  "ambiance-cocon": "Ambiance & Cocon",
   "art-de-la-table": "Art de la table",
   halloween: "Halloween",
   noel: "Noël",
