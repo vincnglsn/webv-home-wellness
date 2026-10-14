@@ -154,6 +154,7 @@ export const GUIDES: Guide[] = [
     productsHeading: "Pour votre coin détente",
     products: [
       { category: "bien-etre", subcategory: "sommeil-repos" },
+      { category: "decoration", subcategory: "ambiance-cocon" },
       { category: "bien-etre", subcategory: "soin-rituel" },
       { category: "decoration", subcategory: "murs-textiles" },
     ],
@@ -361,7 +362,10 @@ export const GUIDES: Guide[] = [
       },
     ],
     productsHeading: "Pour votre coin zen",
-    products: [{ category: "decoration", subcategory: "objets-zen" }],
+    products: [
+      { category: "decoration", subcategory: "objets-zen" },
+      { category: "decoration", subcategory: "ambiance-cocon" },
+    ],
   },
 ];
 
