@@ -4,6 +4,9 @@ import { SiteFooter } from "@/components/SiteFooter";
 
 export const metadata: Metadata = {
   title: "Conditions générales de vente — Maison Bien-Être",
+  description:
+    "Conditions générales de vente de Maison Bien-Être : commande, prix, paiement sécurisé, livraison, droit de rétractation de 14 jours et garanties.",
+  alternates: { canonical: "/cgv" },
 };
 
 export default function CgvPage() {

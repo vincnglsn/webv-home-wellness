@@ -8,8 +8,11 @@ import {
   getCategoryTree,
   getProductsBySubcategory,
   subcategoryLabel,
+  descriptionExcerpt,
+  seoTitle,
   SITE_URL,
 } from "@/lib/products";
+import { SUBCATEGORY_INTROS } from "@/lib/category-intros";
 import { CartHeaderLink } from "@/components/CartHeaderLink";
 import { SiteFooter } from "@/components/SiteFooter";
 import { CategoryNav } from "@/components/CategoryNav";
@@ -31,8 +34,10 @@ export async function generateMetadata({
 
   const catLabel = categoryLabel(category);
   const subLabel = subcategoryLabel(subcategory);
-  const title = `${subLabel} — ${catLabel} — Maison Bien-Être`;
-  const description = `Notre sélection ${subLabel.toLowerCase()} dans la catégorie ${catLabel.toLowerCase()} : produits choisis, livraison suivie et retour possible sous 14 jours.`;
+  const title = seoTitle(`${subLabel} — ${catLabel}`);
+  const description = SUBCATEGORY_INTROS[subcategory]
+    ? descriptionExcerpt(SUBCATEGORY_INTROS[subcategory])
+    : `Notre sélection ${subLabel.toLowerCase()} dans la catégorie ${catLabel.toLowerCase()} : livraison suivie et retour possible sous 14 jours.`;
   const url = `${SITE_URL}/categorie/${category}/${subcategory}`;
 
   return {
@@ -98,16 +103,27 @@ export default async function SubcategoryPage({
             {categoryLabel(category)}
           </Link>
         </p>
-        <h1 className="mb-6 text-2xl font-serif font-semibold text-stone-900 dark:text-stone-50">
+        <h1 className="mb-2 text-2xl font-serif font-semibold text-stone-900 dark:text-stone-50">
           {subcategoryLabel(subcategory)}
         </h1>
+        {SUBCATEGORY_INTROS[subcategory] && (
+          <p className="mb-6 max-w-2xl text-stone-600 dark:text-stone-400">
+            {SUBCATEGORY_INTROS[subcategory]}
+          </p>
+        )}
 
         <CategoryNav tree={tree} activeCategory={category} activeSubcategory={subcategory} />
 
         {products.length === 0 ? (
           <p className="text-stone-500">Aucun produit disponible dans cette sous-catégorie.</p>
         ) : (
-          <ProductGrid products={products} />
+          <section>
+            <h2 className="mb-4 text-lg font-serif font-semibold text-stone-900 dark:text-stone-50">
+              {products.length} produit{products.length > 1 ? "s" : ""}{" "}
+              {subcategoryLabel(subcategory)}
+            </h2>
+            <ProductGrid products={products} />
+          </section>
         )}
       </main>
 

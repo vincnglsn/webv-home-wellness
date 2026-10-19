@@ -6,8 +6,11 @@ import {
   categoryLabel,
   getCategoryTree,
   getProductsByCategory,
+  descriptionExcerpt,
+  seoTitle,
   SITE_URL,
 } from "@/lib/products";
+import { CATEGORY_INTROS } from "@/lib/category-intros";
 import { CartHeaderLink } from "@/components/CartHeaderLink";
 import { SiteFooter } from "@/components/SiteFooter";
 import { CategoryNav } from "@/components/CategoryNav";
@@ -28,8 +31,10 @@ export async function generateMetadata({
   }
 
   const label = categoryLabel(category);
-  const title = `${label} — Maison Bien-Être`;
-  const description = `Découvrez notre sélection ${label.toLowerCase()} : objets choisis pour leur qualité et leur utilité réelle, livraison suivie et retour possible sous 14 jours.`;
+  const title = seoTitle(label);
+  const description = CATEGORY_INTROS[category]
+    ? descriptionExcerpt(CATEGORY_INTROS[category])
+    : `Découvrez notre sélection ${label.toLowerCase()} : livraison suivie et retour possible sous 14 jours.`;
   const url = `${SITE_URL}/categorie/${category}`;
 
   return {
@@ -88,8 +93,8 @@ export default async function CategoryPage({
           {categoryLabel(category)}
         </h1>
         <p className="mb-6 max-w-2xl text-stone-600 dark:text-stone-400">
-          Une sélection d&apos;articles {categoryLabel(category).toLowerCase()}, choisis pour leur
-          utilité réelle plutôt qu&apos;un catalogue sans fin.
+          {CATEGORY_INTROS[category] ??
+            `Une sélection d'articles ${categoryLabel(category).toLowerCase()}.`}
         </p>
 
         <CategoryNav tree={tree} activeCategory={category} />
@@ -97,7 +102,7 @@ export default async function CategoryPage({
         {products.length === 0 ? (
           <p className="text-stone-500">Aucun produit disponible dans cette catégorie.</p>
         ) : (
-          <GroupedProductGrid products={products} />
+          <GroupedProductGrid products={products} limit={8} />
         )}
       </main>
 

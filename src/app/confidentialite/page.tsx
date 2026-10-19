@@ -4,6 +4,9 @@ import { SiteFooter } from "@/components/SiteFooter";
 
 export const metadata: Metadata = {
   title: "Politique de confidentialité — Maison Bien-Être",
+  description:
+    "Données collectées par Maison Bien-Être, finalités, durée de conservation, sous-traitants (paiement, livraison) et exercice de vos droits RGPD.",
+  alternates: { canonical: "/confidentialite" },
 };
 
 export default function ConfidentialitePage() {

@@ -7,6 +7,8 @@ export type GuideSection = { heading: string; paragraphs: string[] };
 export type Guide = {
   slug: string;
   title: string;
+  // Titre court pour la balise <title> (60 caractères au plus) quand `title` est trop long.
+  metaTitle?: string;
   description: string;
   publishedAt: string; // AAAA-MM-JJ
   intro: string;
@@ -20,6 +22,7 @@ export const GUIDES: Guide[] = [
   {
     slug: "idees-cadeaux-noel-maison",
     title: "Idées cadeaux de Noël pour la maison : 6 pistes qui plaisent",
+    metaTitle: "Idées cadeaux de Noël pour la maison : 6 pistes",
     description:
       "Lumières, textiles, petites déco à suspendre : comment choisir un cadeau de Noël pour la maison, selon la personne et le budget.",
     publishedAt: "2026-10-07",
@@ -70,6 +73,7 @@ export const GUIDES: Guide[] = [
   {
     slug: "decoration-halloween-sans-flamme",
     title: "Décorer pour Halloween sans flamme : lumières, citrouilles et ambiance",
+    metaTitle: "Décoration Halloween sans flamme : idées et lumières",
     description:
       "Comment réussir une décoration d'Halloween chaleureuse et sûre : lumières LED, citrouilles, squelettes, et astuces de placement.",
     publishedAt: "2026-10-07",
@@ -114,6 +118,7 @@ export const GUIDES: Guide[] = [
   {
     slug: "creer-un-coin-detente-chez-soi",
     title: "Créer un coin détente chez soi : lumière, textures et petits rituels",
+    metaTitle: "Créer un coin détente chez soi : lumière et rituels",
     description:
       "Quelques idées simples pour aménager un coin calme à la maison : lumière douce, matières agréables et gestes du soir.",
     publishedAt: "2026-10-07",
@@ -223,6 +228,7 @@ export const GUIDES: Guide[] = [
   {
     slug: "dresser-une-belle-table-sans-se-ruiner",
     title: "Dresser une belle table sans se ruiner : chemin, nappe et plateaux",
+    metaTitle: "Dresser une belle table sans se ruiner",
     description:
       "Nappe, chemin de table, dessous de verre, plateaux : comment habiller une table de repas ou de fête avec quelques pièces bien choisies.",
     publishedAt: "2026-10-09",
@@ -275,6 +281,7 @@ export const GUIDES: Guide[] = [
   {
     slug: "choisir-et-accrocher-une-tenture-murale",
     title: "Tenture murale : comment la choisir et l'accrocher sans percer",
+    metaTitle: "Tenture murale : la choisir et l'accrocher sans percer",
     description:
       "Taille, style, matière et fixation : nos conseils pour choisir une tenture murale et l'installer proprement, même en location.",
     publishedAt: "2026-10-09",
@@ -318,6 +325,7 @@ export const GUIDES: Guide[] = [
   {
     slug: "creer-une-ambiance-zen-a-la-maison",
     title: "Créer une ambiance zen à la maison : encens, thé, lumières et objets",
+    metaTitle: "Créer une ambiance zen à la maison : idées simples",
     description:
       "Quelques idées simples pour installer une ambiance calme chez soi : encens, thé, bougeoirs, objets décoratifs et petits rituels.",
     publishedAt: "2026-10-09",

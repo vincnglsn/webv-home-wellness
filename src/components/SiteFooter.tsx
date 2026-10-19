@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-stone-200 py-8 text-center text-xs text-stone-500 dark:border-stone-800">
+    <footer className="border-t border-stone-200 py-8 text-center text-xs text-stone-600 dark:border-stone-800 dark:text-stone-400">
       <nav className="mx-auto mb-3 flex max-w-5xl flex-wrap items-center justify-center gap-x-6 gap-y-2 px-6">
         <Link href="/a-propos" className="hover:underline">
           À propos

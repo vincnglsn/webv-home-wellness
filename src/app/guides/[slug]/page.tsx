@@ -6,7 +6,11 @@ import { LegalHeader } from "@/components/LegalHeader";
 import { ProductGrid } from "@/components/ProductGrid";
 import { SiteFooter } from "@/components/SiteFooter";
 import { GUIDES, getGuide } from "@/lib/guides";
-import { getProductsBySubcategory, SITE_URL, type Product } from "@/lib/products";
+import { getProductsBySubcategory, seoTitle, SITE_URL, type Product } from "@/lib/products";
+
+// La sélection de produits en bas de guide est relue toutes les heures (un produit
+// retiré de la boutique disparaît des guides sans redéploiement).
+export const revalidate = 3600;
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -19,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const guide = getGuide(slug);
   if (!guide) return {};
   return {
-    title: `${guide.title} — Maison Bien-Être`,
+    title: seoTitle(guide.metaTitle ?? guide.title),
     description: guide.description,
     alternates: { canonical: `${SITE_URL}/guides/${guide.slug}` },
   };
@@ -35,7 +39,8 @@ export default async function GuidePage({ params }: Props) {
     const groups = await Promise.all(
       guide.products.map((p) => getProductsBySubcategory(p.category, p.subcategory))
     );
-    products = groups.flat().filter((p) => p.in_stock);
+    // 12 produits au plus : une sélection, pas tout le rayon.
+    products = groups.flat().filter((p) => p.in_stock).slice(0, 12);
   } catch {
     // Base indisponible : le guide reste lisible sans la sélection de produits.
   }

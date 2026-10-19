@@ -4,7 +4,9 @@ import { SiteFooter } from "@/components/SiteFooter";
 
 export const metadata: Metadata = {
   title: "Contact — Maison Bien-Être",
-  description: "Contactez le service client de Maison Bien-Être.",
+  description:
+    "Une question sur un produit, une commande ou une livraison ? Contactez le service client de Maison Bien-Être par email.",
+  alternates: { canonical: "/contact" },
 };
 
 export default function ContactPage() {
