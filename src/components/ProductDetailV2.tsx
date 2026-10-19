@@ -78,7 +78,7 @@ export function ProductDetailV2({
   images: string[];
   reviewSummary: ReviewSummary | null;
 }) {
-  const { hook, benefits, usage } = parseDescription(product.description);
+  const { hook, benefits, usage, extra } = parseDescription(product.description);
   const faqs = FAQS.filter((item) => PRODUCT_FAQ_QUESTIONS.includes(item.question));
   const price = formatPrice(product.price_cents, product.currency);
   const delivery = deliveryWindow();
@@ -200,6 +200,11 @@ export function ProductDetailV2({
         {usage && (
           <Accordion title="Utilisation" defaultOpen>
             <p>{usage}</p>
+            {extra.map((paragraph) => (
+              <p key={paragraph.slice(0, 40)} className="mt-3">
+                {paragraph}
+              </p>
+            ))}
           </Accordion>
         )}
         <Accordion title="Livraison et retours">

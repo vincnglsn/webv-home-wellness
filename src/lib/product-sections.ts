@@ -6,6 +6,8 @@ export type ProductSections = {
   hook: string;
   benefits: string[];
   usage: string | null;
+  // Paragraphes supplémentaires, après la phrase d'usage (conseils, entretien, pour qui).
+  extra: string[];
 };
 
 export function parseDescription(description: string): ProductSections {
@@ -18,6 +20,7 @@ export function parseDescription(description: string): ProductSections {
   const hook = blocks[0] ?? "";
   let benefits: string[] = [];
   let usage: string | null = null;
+  const extra: string[] = [];
 
   for (const block of blocks.slice(1)) {
     const lines = block.split("\n").map((line) => line.trim());
@@ -26,10 +29,12 @@ export function parseDescription(description: string): ProductSections {
       benefits = bullets.map((line) => line.replace(/^•\s*/, ""));
     } else if (!usage) {
       usage = block;
+    } else {
+      extra.push(block);
     }
   }
 
-  return { hook, benefits, usage };
+  return { hook, benefits, usage, extra };
 }
 
 // Photos de la galerie : la colonne `images` de la base (choisies à la main parmi celles
