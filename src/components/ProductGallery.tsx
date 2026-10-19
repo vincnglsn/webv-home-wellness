@@ -75,7 +75,7 @@ export function ProductGallery({
                     : "border-transparent opacity-70 hover:opacity-100"
                 }`}
               >
-                <Image src={src} alt="" fill sizes="120px" className="object-cover" />
+                <Image src={src} alt={`${alt}, photo ${i + 1}`} fill sizes="120px" className="object-cover" />
               </button>
             </li>
           ))}

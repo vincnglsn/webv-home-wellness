@@ -4,6 +4,9 @@ import { SiteFooter } from "@/components/SiteFooter";
 
 export const metadata: Metadata = {
   title: "Livraison & retours — Maison Bien-Être",
+  description:
+    "Retours sous 14 jours, état des articles, frais de retour et délai de remboursement : comment retourner un produit commandé sur Maison Bien-Être.",
+  alternates: { canonical: "/retours" },
 };
 
 export default function RetoursPage() {

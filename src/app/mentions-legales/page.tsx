@@ -4,6 +4,9 @@ import { SiteFooter } from "@/components/SiteFooter";
 
 export const metadata: Metadata = {
   title: "Mentions légales — Maison Bien-Être",
+  description:
+    "Mentions légales du site Maison Bien-Être : éditeur, numéro SIRET, adresse, directeur de la publication et hébergeur.",
+  alternates: { canonical: "/mentions-legales" },
 };
 
 export default function MentionsLegalesPage() {

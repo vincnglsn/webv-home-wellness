@@ -27,12 +27,9 @@ function ProductCard({ product }: { product: Product }) {
         )}
       </div>
       <div className="flex flex-1 flex-col gap-1 p-4">
-        <h2 className="font-medium text-stone-900 group-hover:underline dark:text-stone-50">
+        <h3 className="font-medium text-stone-900 group-hover:underline dark:text-stone-50">
           {product.name}
-        </h2>
-        <p className="text-sm text-stone-600 dark:text-stone-400 line-clamp-2">
-          {product.description}
-        </p>
+        </h3>
         <span className="mt-2 font-semibold text-stone-900 dark:text-stone-50">
           {formatPrice(product.price_cents, product.currency)}
         </span>
@@ -51,18 +48,38 @@ export function ProductGrid({ products }: { products: Product[] }) {
   );
 }
 
-export function GroupedProductGrid({ products }: { products: Product[] }) {
+// `limit` : nombre de produits affichés par sous-catégorie (l'accueil n'en montre
+// qu'une partie, avec un lien vers la page de la sous-catégorie).
+export function GroupedProductGrid({ products, limit }: { products: Product[]; limit?: number }) {
   const groups = groupBySubcategory(products);
   return (
     <div className="flex flex-col gap-12">
-      {groups.map((group) => (
-        <section key={group.subcategory ?? "autres"}>
-          <h2 className="mb-4 text-lg font-serif font-semibold text-stone-900 dark:text-stone-50">
-            {group.label}
-          </h2>
-          <ProductGrid products={group.products} />
-        </section>
-      ))}
+      {groups.map((group) => {
+        const shown = limit ? group.products.slice(0, limit) : group.products;
+        const category = group.products[0]?.category;
+        const moreHref =
+          limit && group.subcategory && category && group.products.length > shown.length
+            ? `/categorie/${category}/${group.subcategory}`
+            : null;
+        return (
+          <section key={group.subcategory ?? "autres"}>
+            <div className="mb-4 flex items-baseline justify-between gap-4">
+              <h2 className="text-lg font-serif font-semibold text-stone-900 dark:text-stone-50">
+                {group.label}
+              </h2>
+              {moreHref && (
+                <Link
+                  href={moreHref}
+                  className="shrink-0 text-sm font-medium text-stone-700 underline-offset-4 hover:underline dark:text-stone-300"
+                >
+                  Voir les {group.products.length} produits
+                </Link>
+              )}
+            </div>
+            <ProductGrid products={shown} />
+          </section>
+        );
+      })}
     </div>
   );
 }

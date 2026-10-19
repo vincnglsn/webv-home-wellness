@@ -7,6 +7,8 @@ import {
   categoryLabel,
   subcategoryLabel,
   descriptionExcerpt,
+  seoTitle,
+  siteImageUrl,
   SITE_URL,
 } from "@/lib/products";
 import { CartHeaderLink } from "@/components/CartHeaderLink";
@@ -33,7 +35,7 @@ export async function generateMetadata({
     return { title: "Produit introuvable — Maison Bien-Être" };
   }
 
-  const title = `${product.name} — Maison Bien-Être`;
+  const title = seoTitle(product.name);
   const description = descriptionExcerpt(product.description);
   const url = `${SITE_URL}/produits/${product.slug}`;
 
@@ -46,7 +48,7 @@ export async function generateMetadata({
       description,
       url,
       type: "website",
-      ...(product.image_url ? { images: [{ url: product.image_url }] } : {}),
+      ...(product.image_url ? { images: [{ url: siteImageUrl(product.image_url) }] } : {}),
     },
   };
 }
@@ -110,9 +112,9 @@ export default async function ProductPage({
     name: product.name,
     description: descriptionExcerpt(product.description, 500),
     ...(galleryImages.length > 0
-      ? { image: galleryImages }
+      ? { image: galleryImages.map((url) => siteImageUrl(url)) }
       : product.image_url
-        ? { image: [product.image_url] }
+        ? { image: [siteImageUrl(product.image_url)] }
         : {}),
     brand: { "@type": "Brand", name: "Maison Bien-Être" },
     // Note moyenne publiée uniquement si de vrais avis modérés existent.

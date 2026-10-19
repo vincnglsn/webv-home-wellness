@@ -54,6 +54,19 @@ export function formatPrice(priceCents: number, currency: string): string {
 // Les descriptions produit sont au format "accroche\n\nCe que vous
 // obtenez :\n• ...\n\nphrase d'usage" : on ne garde que l'accroche pour les
 // balises meta description, tronquée à une longueur adaptée aux SERP.
+// URL d'une photo fournisseur servie depuis le domaine de la boutique (optimiseur
+// d'images de Next.js), pour le balisage structuré et les aperçus de partage.
+export function siteImageUrl(url: string, width = 1200): string {
+  return `${SITE_URL}/_next/image?url=${encodeURIComponent(url)}&w=${width}&q=75`;
+}
+
+// Titre de page : le nom de la boutique n'est ajouté que si l'ensemble reste
+// sous 60 caractères (au-delà, Google tronque le titre dans ses résultats).
+export function seoTitle(base: string): string {
+  const full = `${base} — Maison Bien-Être`;
+  return full.length <= 60 ? full : base;
+}
+
 export function descriptionExcerpt(description: string, maxLength = 155): string {
   const hook = description.split("\n\n")[0].trim();
   if (hook.length <= maxLength) return hook;
@@ -70,6 +83,16 @@ export async function getProducts(): Promise<Product[]> {
     from products
     order by in_stock desc, (category = 'bien-etre'), subcategory nulls last, created_at desc
   `) as unknown as Product[];
+}
+
+// Entrées du sitemap : tous les produits, avec leur date réelle de mise en ligne.
+export async function getProductsForSitemap(): Promise<
+  { slug: string; category: string; subcategory: string | null; created_at: string }[]
+> {
+  const sql = getSql();
+  return (await sql`
+    select slug, category, subcategory, created_at from products order by id
+  `) as unknown as { slug: string; category: string; subcategory: string | null; created_at: string }[];
 }
 
 // Même liste que getProducts, avec la galerie de photos : réservé au flux produits, pour ne

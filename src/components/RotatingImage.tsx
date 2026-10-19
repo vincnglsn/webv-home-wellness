@@ -9,12 +9,15 @@ import { useEffect, useState } from "react";
 // demandé de réduire les animations.
 export function RotatingImage({
   images,
+  alt,
   sizes,
   className,
   intervalMs = 4500,
   offset = 0,
 }: {
   images: string[];
+  // Texte alternatif commun aux photos de l'encart (ex. « Aperçu du rayon Objets Zen »).
+  alt: string;
   sizes: string;
   className: string;
   intervalMs?: number;
@@ -49,7 +52,7 @@ export function RotatingImage({
         <Image
           key={images[index]}
           src={images[index]}
-          alt=""
+          alt={alt}
           fill
           sizes={sizes}
           className={`${className} ${role === "next" ? "opacity-0" : ""} ${

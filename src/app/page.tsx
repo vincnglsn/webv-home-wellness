@@ -82,10 +82,11 @@ export default async function Home() {
       <main className="mx-auto w-full max-w-5xl flex-1 px-6 py-12">
         <section className="relative mb-8 overflow-hidden rounded-2xl bg-gradient-to-br from-amber-100 via-stone-100 to-stone-200 px-5 py-4 text-center sm:px-8 dark:from-stone-800 dark:via-stone-900 dark:to-stone-950">
           <h1 className="text-xl font-serif font-semibold leading-tight text-stone-900 sm:text-2xl dark:text-stone-50">
-            Une maison apaisée, un quotidien plus doux
+            Objets de décoration et de bien-être pour une maison apaisée
           </h1>
           <p className="mt-1 text-sm text-stone-700 dark:text-stone-300">
-            Une sélection d&apos;objets de bien-être et de décoration pour un intérieur serein.
+            Une maison apaisée, un quotidien plus doux : lumières d&apos;ambiance, textiles, objets
+            zen, massage et sommeil.
           </p>
           <div className="mt-3 flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
             <a
@@ -143,10 +144,50 @@ export default async function Home() {
             {products.length === 0 ? (
               <p className="text-stone-500">Aucun produit disponible pour le moment.</p>
             ) : (
-              <GroupedProductGrid products={products} />
+              <GroupedProductGrid products={products} limit={8} />
             )}
           </>
         )}
+
+        <section className="mt-16 border-t border-stone-200 pt-12 dark:border-stone-800">
+          <h2 className="font-serif text-xl font-semibold text-stone-900 dark:text-stone-50">
+            La boutique en quelques mots
+          </h2>
+          <div className="mt-4 max-w-3xl space-y-4 text-stone-700 dark:text-stone-300">
+            <p>
+              Maison Bien-Être est une petite boutique en ligne indépendante, tenue par Vincent
+              depuis le Vaucluse. Elle rassemble des objets de décoration et de bien-être pour
+              rendre la maison plus douce au quotidien : lumières d&apos;ambiance, diffuseurs et
+              veilleuses, textiles et décoration murale, objets zen, art de la table, accessoires
+              de massage, de soin, de sommeil et de posture.
+            </p>
+            <p>
+              Chaque produit est choisi dans le catalogue de fournisseurs partenaires, puis vérifié
+              avant d&apos;être mis en ligne : photos qui montrent le vrai modèle vendu, délais de
+              livraison raisonnables et fiche rédigée en français, sans promesse de santé ni
+              effet miracle. Le prix affiché comprend la livraison, offerte en France, en
+              Belgique, en Suisse et au Luxembourg.
+            </p>
+            <p>
+              Les commandes sont expédiées depuis des entrepôts partenaires, avec un numéro de
+              suivi, dans un délai moyen de 7 à 20 jours ouvrés. Vous disposez de 14 jours après
+              réception pour changer d&apos;avis, et le paiement est sécurisé par Stripe.
+            </p>
+            <p>
+              Pour trouver l&apos;inspiration, les guides ci-dessous donnent des idées concrètes
+              pour décorer, offrir et aménager un coin détente, une table de fête ou une chambre
+              plus apaisante. Une question avant de commander ? La page{" "}
+              <Link href="/faq" className="underline underline-offset-4">
+                Questions fréquentes
+              </Link>{" "}
+              et la page{" "}
+              <Link href="/contact" className="underline underline-offset-4">
+                Contact
+              </Link>{" "}
+              sont là pour vous répondre.
+            </p>
+          </div>
+        </section>
 
         <section className="mt-16 border-t border-stone-200 pt-12 dark:border-stone-800">
           <h2 className="font-serif text-xl font-semibold text-stone-900 dark:text-stone-50">

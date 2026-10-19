@@ -56,6 +56,7 @@ export function CategoryCards({
               >
                 <RotatingImage
                   images={images}
+                  alt={`Aperçu des produits ${entry.label}`}
                   offset={entryIndex}
                   sizes="(max-width: 640px) 100vw, 50vw"
                   className="scale-110 object-cover transition duration-300 group-hover:scale-125"
@@ -102,6 +103,7 @@ export function CategoryCards({
                 >
                   <RotatingImage
                     images={images}
+                    alt={`Aperçu du rayon ${sub.label}`}
                     offset={subIndex + 2}
                     sizes="(max-width: 640px) 50vw, 25vw"
                     className="scale-110 object-cover transition duration-300 group-hover:scale-125"
