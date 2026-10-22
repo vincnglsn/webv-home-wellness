@@ -23,6 +23,14 @@ function xml(value: string): string {
     .replace(/'/g, "&apos;");
 }
 
+// Google Merchant Center refuse les identifiants de plus de 50 caractères : au-delà, on
+// tronque le slug (sans tiret final). Les slugs plus courts restent tels quels, donc
+// l'identifiant des autres produits ne change pas. Le lien vers la fiche garde le slug entier.
+const MAX_FEED_ID = 50;
+function feedId(slug: string): string {
+  return slug.length <= MAX_FEED_ID ? slug : slug.slice(0, MAX_FEED_ID).replace(/-+$/, "");
+}
+
 export async function GET() {
   let products;
   try {
@@ -44,7 +52,7 @@ export async function GET() {
         .map((url) => `      <g:additional_image_link>${xml(url)}</g:additional_image_link>`);
       return [
         "    <item>",
-        `      <g:id>${xml(p.slug)}</g:id>`,
+        `      <g:id>${xml(feedId(p.slug))}</g:id>`,
         `      <title>${xml(p.name.slice(0, 150))}</title>`,
         `      <description>${xml(p.description.trim().slice(0, 5000))}</description>`,
         `      <link>${xml(`${SITE_URL}/produits/${p.slug}`)}</link>`,
