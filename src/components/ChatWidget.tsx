@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useCart } from "@/lib/cart-context";
 import { formatPrice } from "@/lib/products";
 
+import { CONTACT_EMAIL } from "@/lib/site";
 type ProductCard = {
   slug: string;
   name: string;
@@ -25,7 +26,7 @@ type ChatMessage = {
 const GREETING: ChatMessage = {
   role: "assistant",
   content:
-    "Bonjour, je suis le conseiller de Maison Bien-Être. Je peux vous aider à choisir un produit, suivre une commande ou répondre à vos questions sur la livraison et les retours. Pour une question plus précise, écrivez-nous à contact@whatelsebyvinc.com.",
+    "Bonjour, je suis le conseiller de Maison Bien-Être. Je peux vous aider à choisir un produit, suivre une commande ou répondre à vos questions sur la livraison et les retours. Pour une question plus précise, écrivez-nous à " + CONTACT_EMAIL + ".",
 };
 
 const SUGGESTIONS = [
@@ -119,7 +120,7 @@ export function ChatWidget() {
           role: "assistant",
           content:
             data.reply ??
-            "Je rencontre un souci technique. Écrivez-nous à contact@whatelsebyvinc.com.",
+            "Je rencontre un souci technique. Écrivez-nous à " + CONTACT_EMAIL + ".",
           products: data.products,
           suggestions: data.suggestions,
         },
@@ -129,7 +130,7 @@ export function ChatWidget() {
         ...next,
         {
           role: "assistant",
-          content: "Connexion impossible pour le moment. Écrivez-nous à contact@whatelsebyvinc.com.",
+          content: "Connexion impossible pour le moment. Écrivez-nous à " + CONTACT_EMAIL + ".",
         },
       ]);
     } finally {

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { LegalHeader } from "@/components/LegalHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 
+import { CONTACT_EMAIL } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Mentions légales — Maison Bien-Être",
   description:
@@ -27,7 +28,7 @@ export default function MentionsLegalesPage() {
               <br />
               Adresse : 159 allée des Vignes, 84810 Aubignan, France
               <br />
-              E-mail : contact@whatelsebyvinc.com
+              E-mail : {CONTACT_EMAIL}
             </p>
           </section>
           <section>

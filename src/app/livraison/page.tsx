@@ -4,6 +4,7 @@ import { LegalHeader } from "@/components/LegalHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SITE_URL } from "@/lib/products";
 
+import { CONTACT_EMAIL } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Livraison — Maison Bien-Être",
   description:
@@ -75,8 +76,8 @@ export default function LivraisonPage() {
             <h2 className={heading}>Un problème avec votre livraison ?</h2>
             <p>
               Colis en retard, abîmé ou incomplet : écrivez-nous à{" "}
-              <a href="mailto:contact@whatelsebyvinc.com" className="underline">
-                contact@whatelsebyvinc.com
+              <a href={`mailto:${CONTACT_EMAIL}`} className="underline">
+                {CONTACT_EMAIL}
               </a>{" "}
               en indiquant votre numéro de commande. Nous répondons sous 48h ouvrées. Les
               conditions de retour et de remboursement sont détaillées sur la page{" "}

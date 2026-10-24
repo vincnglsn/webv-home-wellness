@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { LegalHeader } from "@/components/LegalHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 
+import { CONTACT_EMAIL } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Livraison & retours — Maison Bien-Être",
   description:
@@ -44,8 +45,8 @@ export default function RetoursPage() {
             </h2>
             <p>
               Contactez-nous à{" "}
-              <a href="mailto:contact@whatelsebyvinc.com" className="underline">
-                contact@whatelsebyvinc.com
+              <a href={`mailto:${CONTACT_EMAIL}`} className="underline">
+                {CONTACT_EMAIL}
               </a>{" "}
               en indiquant votre numéro de commande. Le retour s&apos;effectue par envoi postal.
               Les articles doivent nous être retournés neufs ou légèrement utilisés. Les frais de
