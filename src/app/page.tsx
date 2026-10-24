@@ -11,6 +11,7 @@ import { JsonLd } from "@/components/JsonLd";
 import type { Metadata } from "next";
 import { SITE_URL } from "@/lib/products";
 
+import { CONTACT_EMAIL } from "@/lib/site";
 export const revalidate = 60;
 
 const HOME_TITLE = "Maison Bien-Être — Décoration et bien-être pour la maison";
@@ -37,7 +38,7 @@ const siteJsonLd = [
     "@type": "Organization",
     name: "Maison Bien-Être",
     url: SITE_URL,
-    email: "contact@whatelsebyvinc.com",
+    email: CONTACT_EMAIL,
   },
   {
     "@context": "https://schema.org",

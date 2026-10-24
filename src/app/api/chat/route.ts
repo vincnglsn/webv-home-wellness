@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { answer, type ChatTurn } from "@/lib/chat/engine";
 
+import { CONTACT_EMAIL } from "@/lib/site";
 const MAX_HISTORY = 20;
 const MAX_MESSAGE_CHARS = 1000;
 
 const FALLBACK_REPLY =
-  "Je rencontre un souci technique. Vous pouvez nous écrire à contact@whatelsebyvinc.com, nous répondons sous 48h ouvrées.";
+  "Je rencontre un souci technique. Vous pouvez nous écrire à " + CONTACT_EMAIL + ", nous répondons sous 48h ouvrées.";
 
 // Limitation par IP en mémoire : suffisante contre l'abus basique, mais
 // propre à chaque instance serverless (pas un quota global).

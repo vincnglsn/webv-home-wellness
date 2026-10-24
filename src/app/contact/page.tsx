@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { LegalHeader } from "@/components/LegalHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 
+import { CONTACT_EMAIL } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Contact — Maison Bien-Être",
   description:
@@ -24,8 +25,8 @@ export default function ContactPage() {
           </p>
           <p>
             <strong className="text-stone-900 dark:text-stone-50">E-mail :</strong>{" "}
-            <a href="mailto:contact@whatelsebyvinc.com" className="underline">
-              contact@whatelsebyvinc.com
+            <a href={`mailto:${CONTACT_EMAIL}`} className="underline">
+              {CONTACT_EMAIL}
             </a>
           </p>
           <p className="text-sm text-stone-500">

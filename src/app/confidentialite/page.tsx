@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { LegalHeader } from "@/components/LegalHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 
+import { CONTACT_EMAIL } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Politique de confidentialité — Maison Bien-Être",
   description:
@@ -52,8 +53,8 @@ export default function ConfidentialitePage() {
             <p>
               Conformément au RGPD, vous disposez d&apos;un droit d&apos;accès, de rectification et de
               suppression de vos données. Pour l&apos;exercer, contactez-nous à{" "}
-              <a href="mailto:contact@whatelsebyvinc.com" className="underline">
-                contact@whatelsebyvinc.com
+              <a href={`mailto:${CONTACT_EMAIL}`} className="underline">
+                {CONTACT_EMAIL}
               </a>
               .
             </p>

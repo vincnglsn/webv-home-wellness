@@ -9,6 +9,7 @@ import {
   type ChatProductCard,
 } from "@/lib/chat/catalog";
 
+import { CONTACT_EMAIL } from "@/lib/site";
 export type ChatTurn = { role: "user" | "assistant"; content: string };
 
 export type ChatAnswer = {
@@ -17,7 +18,7 @@ export type ChatAnswer = {
   suggestions: string[];
 };
 
-const CONTACT = "contact@whatelsebyvinc.com";
+const CONTACT = CONTACT_EMAIL;
 const ORDER_PROMPT_MARKER = "numéro de commande";
 
 const SUPPLIER_STATUS_LABELS: Record<string, string> = {

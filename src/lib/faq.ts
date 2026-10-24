@@ -1,3 +1,5 @@
+import { CONTACT_EMAIL } from "@/lib/site";
+
 export type Faq = { question: string; answer: string };
 
 // Les réponses reprennent strictement les informations des pages Livraison,
@@ -36,7 +38,7 @@ export const FAQS: Faq[] = [
   {
     question: "Puis-je retourner un article ?",
     answer:
-      "Oui. Vous disposez de 14 jours à compter de la réception pour exercer votre droit de rétractation, sans avoir à justifier de motif. Contactez-nous à contact@whatelsebyvinc.com avec votre numéro de commande : le retour s'effectue par envoi postal.",
+      "Oui. Vous disposez de 14 jours à compter de la réception pour exercer votre droit de rétractation, sans avoir à justifier de motif. Contactez-nous à " + CONTACT_EMAIL + " avec votre numéro de commande : le retour s'effectue par envoi postal.",
   },
   {
     question: "Dans quel état dois-je retourner l'article ?",
@@ -60,11 +62,11 @@ export const FAQS: Faq[] = [
   {
     question: "Mon produit est défectueux ou ne correspond pas à ma commande, que faire ?",
     answer:
-      "Écrivez-nous à contact@whatelsebyvinc.com avec votre numéro de commande et, si possible, des photos. Les frais de retour d'un produit défectueux ou non conforme sont intégralement remboursés.",
+      "Écrivez-nous à " + CONTACT_EMAIL + " avec votre numéro de commande et, si possible, des photos. Les frais de retour d'un produit défectueux ou non conforme sont intégralement remboursés.",
   },
   {
     question: "Comment vous contacter, et sous quel délai répondez-vous ?",
     answer:
-      "Par e-mail à contact@whatelsebyvinc.com. Nous répondons sous 48h ouvrées.",
+      "Par e-mail à " + CONTACT_EMAIL + ". Nous répondons sous 48h ouvrées.",
   },
 ];

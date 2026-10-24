@@ -1,4 +1,5 @@
 import { getSql } from "@/lib/db";
+import { SITE_URL } from "@/lib/site";
 
 export type Product = {
   id: number;
@@ -73,8 +74,8 @@ export function descriptionExcerpt(description: string, maxLength = 155): string
   return `${hook.slice(0, maxLength - 1).trimEnd()}…`;
 }
 
-export const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://home-wellness.whatelsebyvinc.com";
+// L'adresse du site vit dans `@/lib/site` ; elle reste exportée d'ici pour les imports existants.
+export { SITE_URL } from "@/lib/site";
 
 export async function getProducts(): Promise<Product[]> {
   const sql = getSql();
